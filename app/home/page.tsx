@@ -3,6 +3,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import Graph from '@/components/home/Graph'
+import JobTitleModal from '@/components/home/JobTitleModal';
 
 function page() {
     const [windowSize, setWindowSize] = useState({
@@ -30,6 +31,7 @@ function page() {
     return (
         <div className="canvas-container">
             <Graph width={windowSize.width} height={windowSize.height} />
+            <JobTitleModal title="Software engineer" />
         </div>
     )
 }
