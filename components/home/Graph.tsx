@@ -2,8 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import JobTitleModal from './JobTitleModal';
 
 const Graph = ({ width = 600, height = 400 }) => {
+
+    // graph stuff
     const nodeColors = {
         1: '#69b3a2',
         2: '#2c2769',
@@ -230,7 +233,12 @@ const Graph = ({ width = 600, height = 400 }) => {
 
     }, [width, height, nodeList, linksList]);
 
-    return <svg ref={svgRef} ></svg>;
+    return (
+        <>
+            <svg ref={svgRef} ></svg>
+            <JobTitleModal title="Software engineer" width="300px" height="150px" close={()=>{console.log('close')}} />
+        </>
+    );
 };
 
 export default Graph;

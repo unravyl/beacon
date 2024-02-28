@@ -31,7 +31,6 @@ function page() {
     return (
         <div className="canvas-container">
             <Graph width={windowSize.width} height={windowSize.height} />
-            <JobTitleModal title="Software engineer" />
         </div>
     )
 }
