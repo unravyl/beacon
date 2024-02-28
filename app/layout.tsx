@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import { UserWrapper } from "@/context/UserContext";
+import { AuthWrapper } from '@/context/AuthContext';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,9 +30,11 @@ export default function RootLayout({
           rel="stylesheet"
         ></link>
       </head>
-      <UserWrapper>
-        <body className={inter.className}>{children}</body>
-      </UserWrapper>
+      <AuthWrapper>
+        <UserWrapper>
+          <body className={inter.className}>{children}</body>
+        </UserWrapper>
+      </AuthWrapper>
     </html>
   );
 }
