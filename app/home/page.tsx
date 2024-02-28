@@ -34,6 +34,9 @@ function page() {
                 <img src="/logo.png" alt="logo" className="w-[80px] h-[80px]" />
                 <p className="text-white text-5xl font-semibold">Beacon</p>
             </div>
+            <button className="absolute right-0 top-0 p-5">
+                <i className="bx bx-face text-white text-5xl"></i>
+            </button>
             <Graph width={windowSize.width} height={windowSize.height} />
         </div>
     )
