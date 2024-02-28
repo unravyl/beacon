@@ -24,7 +24,7 @@ export default function Home() {
   }, [isLoggedIn, router, user.links])
 
   return (
-    <main className="flex flex-col items-center h-full bg-center text-white bg-[url('../assets/icons/LandPageBG.svg')] " >
+    <main className="flex flex-col items-center h-full bg-center text-white" >
       <img src="/logo.png" className="w-[15rem] mt-24" />
       <h1 className="font-bold text-7xl mb-8">Welcome to Beacon!</h1>
       <button className="flex flex-row border-2 p-2 gap-x-2 hover:bg-slate-400" onClick={handleLoginButtonClick}>Log In with Google <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" /> </button >
