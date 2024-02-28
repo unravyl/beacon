@@ -32,7 +32,7 @@ export default function RootLayout({
       </head>
       <AuthWrapper>
         <UserWrapper>
-          <body className={inter.className}>{children}</body>
+          <body className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}>{children}</body>
         </UserWrapper>
       </AuthWrapper>
     </html>

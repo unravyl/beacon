@@ -2,7 +2,7 @@
 import { React, useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 
-const inputFields = ["Province", "Country", "Interests", "Career History", "Educational Background", "Strengths", "Weaknesses"]
+const inputFields = ["Interests", "Career History", "Educational Background", "Strengths", "Weaknesses"]
 
 function Details() {
     const { user, setUser } = useUserContext();
@@ -25,7 +25,7 @@ function Details() {
     };
 
     return (
-        <div className="w-[42rem] mt-0 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
+        <div className="w-[42rem] mt-2 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
             <div className="text-2xl font-bold">PROFILE</div>
             <img src="https://www.svgrepo.com/show/345418/account-circle.svg" className="w-[10rem]" />
             <div className="text-base font-bold">{"Name".toUpperCase()}</div>
