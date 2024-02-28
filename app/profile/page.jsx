@@ -1,12 +1,12 @@
 import React from "react";
-import Login from "../../components/Profile.jsx"
+import Profile from "../../components/Profile.jsx"
 
 function page() {
     return (
         <section>
             Profile
             <div>
-                <Login />
+                <Profile />
             </div>
         </section>
     );

@@ -22,7 +22,7 @@ function page() {
                 height: window.innerHeight,
             });
         };
-        
+
         window.addEventListener("resize", handleResize);
 
         return () => window.removeEventListener("resize", handleResize);
@@ -30,6 +30,7 @@ function page() {
 
     return (
         <div className="canvas-container">
+            <Spinner />
             <div className="absolute top-0 left-0 p-5 flex items-center">
                 <img src="/logo.png" alt="logo" className="w-[80px] h-[80px]" />
                 <p className="text-white text-5xl font-semibold">Beacon</p>

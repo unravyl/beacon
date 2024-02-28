@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 function Details() {
   const router = useRouter();
-  const {user} = useUserContext();
+  const { user } = useUserContext();
   const [interest, setInterest] = useState(['']);
   const [history, setHistory] = useState(['']);
   const [strength, setStrength] = useState(['']);
@@ -17,19 +17,19 @@ function Details() {
   const [education, setEducation] = useState(['']);
 
   const submit = async () => {
-      postUserInfo(user, {interest, history, strength, weakness, education});
-      const {data} = await axios.post('http://127.0.0.1:8000/api/generate-top-careers/', {interest, history, strength, weakness, education});
-      updateUserNodes(user, data.response);
-      let links = []
-      data.response.forEach((item) => {
-        links.push({source: "Node 1", target: item.id})
-      })
-      postInitialLinks(user, links)
-      router.push('/home');
+    postUserInfo(user, { interest, history, strength, weakness, education });
+    const { data } = await axios.post('http://127.0.0.1:8000/api/generate-top-careers/', { interest, history, strength, weakness, education });
+    updateUserNodes(user, data.response);
+    let links = []
+    data.response.forEach((item) => {
+      links.push({ source: "Node 1", target: item.id })
+    })
+    postInitialLinks(user, links)
+    router.push('/home');
   };
 
   return (
-    <div className="w-[24rem] mt-10 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
+    <div className="w-[24rem] mt-4 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
       <div className="text-2xl font-bold">Setup your Profile</div>
       <p>Name: {user.name}</p>
       <p>Email: {user.email}</p>

@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 export default function Home() {
   const { user, setUser } = useUserContext();
-  const {isLoggedIn, setIsLoggedIn} = useAuthContext();
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
   const router = useRouter()
 
   const handleLoginButtonClick = async () => {
@@ -16,7 +16,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if(isLoggedIn){
+    if (isLoggedIn) {
       router.push('/register');
     }
   }, [isLoggedIn, router])
