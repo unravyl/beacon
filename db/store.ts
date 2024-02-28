@@ -1,7 +1,9 @@
-import { getFirestore, setDoc, doc, collection, query, getDocs, updateDoc, where } from "firebase/firestore";
+import { getFirestore, setDoc, doc, collection, query, getDocs, getDoc, updateDoc, where } from "firebase/firestore";
 import app from '@/db/firebase';
 import { UserInterface } from '@/interface/authInterface';
 import { CareerInterface } from '@/interface/careerInterface';
+import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
+import { Dispatch, SetStateAction } from 'react';
 
 const db = getFirestore(app);
 
@@ -19,6 +21,14 @@ const filterUserID = async (authEmail: string) => {
   
     return authID;
   };
+
+export const refreshUserData = async (user: UserInterface, setUser: Dispatch<SetStateAction<UserInterface>>) => {
+    const authID = await filterUserID(user.email);
+    const userRef = doc(db, "users", authID);
+    const userSnap = await getDoc(userRef);
+    const updatedUserData = userSnap.data();
+    setUser({...user, nodes:updatedUserData?.nodes, links: updatedUserData?.links});
+}
 
 export const postInitialUserData = async (user: UserInterface) => {
     const userQuery = query(collection(db, 'users'));
@@ -62,4 +72,24 @@ export const postUserInfo = async (user: UserInterface, userInfo: any) => {
         weakness: weakness,
         education: education
     });
+}
+
+export const updateUserNodes = async (user: UserInterface, newNodes: NodeInterface[]) => {
+  const authID = await filterUserID(user.email);
+  const userRef = doc(db, "users", authID);
+  const userSnap = await getDoc(userRef);
+  const userNodes = userSnap.data()?.nodes;
+
+  const updatedNodes = [...userNodes, ...newNodes];
+  await updateDoc(userRef, {
+    nodes: updatedNodes
+  })
+}
+
+export const postInitialLinks = async (user: UserInterface, links: LinkInterface) => {
+  const authID = await filterUserID(user.email);
+  const userRef = doc(db, "users", authID);
+  await updateDoc(userRef, {
+    links: links
+  })
 }
