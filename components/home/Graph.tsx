@@ -5,6 +5,9 @@ import * as d3 from 'd3';
 import JobTitleModal from './JobTitleModal';
 
 const Graph = ({ width = 600, height = 400 }) => {
+    const [showJobTitleModal, setShowJobTitleModal] = useState(false);
+    const [showSidePanelModal, setShowSidePanelModal] = useState(false);
+    const [selectedNode, setSelectedNode] = useState(null);
 
     // graph stuff
     const nodeColors = {
@@ -40,7 +43,8 @@ const Graph = ({ width = 600, height = 400 }) => {
             return;
         } else if (d.group === 2) {
             // job title
-            // show side panel
+            setSelectedNode(d);
+            setShowJobTitleModal(true);
         } else if (d.group === 3) {
             // upskill
             // insert nodes
@@ -48,27 +52,27 @@ const Graph = ({ width = 600, height = 400 }) => {
             // requirements
             // show side panel
         }
-        const newNode = {
-            id: `Node ${nodeList.length + 1}`,
-            label: `Node ${nodeList.length + 1} dsfasd fsdafs dfds afd fdsaf dfsa`,
-            group: d.group + 1,
-            x: d.x + (Math.random() - 0.5) * 100,
-            y: d.y + (Math.random() - 0.5) * 100,
-        }
-        setNodeList([...nodeList, newNode])
-        localStorage.setItem('nodeList', JSON.stringify([...nodeList, newNode]))
+        // const newNode = {
+        //     id: `Node ${nodeList.length + 1}`,
+        //     label: `Node ${nodeList.length + 1} dsfasd fsdafs dfds afd fdsaf dfsa`,
+        //     group: d.group + 1,
+        //     x: d.x + (Math.random() - 0.5) * 100,
+        //     y: d.y + (Math.random() - 0.5) * 100,
+        // }
+        // setNodeList([...nodeList, newNode])
+        // localStorage.setItem('nodeList', JSON.stringify([...nodeList, newNode]))
 
-        const newLink = {
-            source: newNode.id,
-            target: d.id
-        }
-        const localStorageLinks = linksList.map(link => {
-            return { source: link.source.id, target: link.target.id }
-        })
-        localStorageLinks.push(newLink);
-        const newList = [...linksList, newLink]
-        setLinksList(newList)
-        localStorage.setItem('linksList', JSON.stringify(localStorageLinks))
+        // const newLink = {
+        //     source: newNode.id,
+        //     target: d.id
+        // }
+        // const localStorageLinks = linksList.map(link => {
+        //     return { source: link.source.id, target: link.target.id }
+        // })
+        // localStorageLinks.push(newLink);
+        // const newList = [...linksList, newLink]
+        // setLinksList(newList)
+        // localStorage.setItem('linksList', JSON.stringify(localStorageLinks))
     }
 
     useEffect(() => {
@@ -236,7 +240,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     return (
         <>
             <svg ref={svgRef} ></svg>
-            <JobTitleModal title="Software engineer" width="300px" height="150px" close={()=>{console.log('close')}} />
+            {showJobTitleModal && <JobTitleModal title={selectedNode.label} width="300px" height="150px" close={()=>{setShowJobTitleModal(false)}} />}
         </>
     );
 };
