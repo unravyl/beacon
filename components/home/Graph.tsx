@@ -2,8 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+
 import JobTitleModal from './JobTitleModal';
 import Details from '@/components/home/Details';
+import SimpleSidePanel from '@/components/home/SimpleSidePanel';
+
 import { set } from 'firebase/database';
 import { useUserContext } from '@/context/UserContext';
 
@@ -11,6 +14,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     const {user, setUser} = useUserContext();
     const [showJobTitleModal, setShowJobTitleModal] = useState(false);
     const [showSidePanelModal, setShowSidePanelModal] = useState(false);
+    const [showSimpleSidePanel, setShowSimpleSidePanel] = useState(false);
     const [selectedNode, setSelectedNode] = useState(null);
 
 
@@ -39,7 +43,6 @@ const Graph = ({ width = 600, height = 400 }) => {
     const [linksList, setLinksList] = useState(
         user.links
     );
-    const [showSidePanel, setShowSidePanel] = useState(false);
 
     const handleNodeClick = (d) => {
         if (d.group === 1) {
@@ -49,9 +52,12 @@ const Graph = ({ width = 600, height = 400 }) => {
             setSelectedNode(d);
             setShowJobTitleModal(true);
             setShowSidePanelModal(false)
+            setShowSimpleSidePanel(false);
         } else if (d.group === 3) {
-            // upskill
-            // insert nodes
+            setSelectedNode(d);
+            setShowSimpleSidePanel(true);
+            setShowSidePanelModal(false);
+            setShowJobTitleModal(false);
         } else if (d.group === 4) {
             // requirements
             // show side panel
@@ -257,6 +263,7 @@ const Graph = ({ width = 600, height = 400 }) => {
             summary={()=>{ showSummary(selectedNode)}}
             expand={()=>{expandNode(selectedNode)}}
             />}
+            {showSimpleSidePanel && ( <SimpleSidePanel details={{title: selectedNode.label, description: selectedNode.details.description}} close={()=>setShowSimpleSidePanel(false)} />)}
             {showSidePanelModal && ( <Details details={{...selectedNode.details, title: selectedNode.label}} close={()=>setShowSidePanelModal(false)} />)}
         </>
     );
