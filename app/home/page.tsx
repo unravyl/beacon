@@ -30,7 +30,10 @@ function page() {
 
     return (
         <div className="canvas-container">
-            {/* <div className="absolute w-[30px] h-[30px]"></div> */}
+            <div className="absolute top-0 left-0 p-5 flex items-center">
+                <img src="/logo.png" alt="logo" className="w-[80px] h-[80px]" />
+                <p className="text-white text-5xl font-semibold">Beacon</p>
+            </div>
             <Graph width={windowSize.width} height={windowSize.height} />
         </div>
     )

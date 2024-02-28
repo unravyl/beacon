@@ -3,7 +3,7 @@
 import React from 'react'
 
 export default function JobTitleModal(props) {
-    const {title="job title", width="300px", height="200px", close} = props;
+    const {title="job title", width="300px", height="200px", close, summary, expand} = props;
     const modalStyle = {
         width: width,
         height: height
@@ -18,8 +18,8 @@ export default function JobTitleModal(props) {
                     </button>
                 </div>
                 <div className="flex justify-center space-x-2">
-                    <button className="flex-grow px-4 py-2 button-1">Summary</button>
-                    <button className="flex-grow px-4 py-2 button-2">Expand</button>
+                    <button onClick={summary} className="flex-grow px-4 py-2 button-1">Summary</button>
+                    <button onClick={expand} className="flex-grow px-4 py-2 button-2">Expand</button>
                 </div>
             </div>
         </div>

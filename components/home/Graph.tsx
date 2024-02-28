@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import JobTitleModal from './JobTitleModal';
+import { set } from 'firebase/database';
 
 const Graph = ({ width = 600, height = 400 }) => {
     const [showJobTitleModal, setShowJobTitleModal] = useState(false);
@@ -14,6 +15,16 @@ const Graph = ({ width = 600, height = 400 }) => {
         1: '#69b3a2',
         2: '#2c2769',
         3: '#32CD32',
+    }
+
+    const showSummary = (node) => {
+        console.log("show summary");
+        setShowJobTitleModal(false);
+    }
+
+    const expandNode = (node) => {
+        console.log("expand node");
+        setShowJobTitleModal(false);
     }
 
     const svgRef = useRef();
@@ -240,7 +251,11 @@ const Graph = ({ width = 600, height = 400 }) => {
     return (
         <>
             <svg ref={svgRef} ></svg>
-            {showJobTitleModal && <JobTitleModal title={selectedNode.label} width="300px" height="150px" close={()=>{setShowJobTitleModal(false)}} />}
+            {showJobTitleModal && <JobTitleModal title={selectedNode.label} width="300px" height="150px" 
+            close={()=>{setShowJobTitleModal(false)}} 
+            summary={()=>{() => {showSummary(selectedNode)}}}
+            expand={()=>{() => {expandNode(selectedNode)}}}
+            />}
         </>
     );
 };
