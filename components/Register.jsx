@@ -1,7 +1,9 @@
 "use client";
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 import Input from "@/components/generics/Input.jsx";
 import { useUserContext } from '@/context/UserContext';
+import { postUserInfo } from '@/db/store';
+import axios from 'axios';
 
 function Details() {
   const {user} = useUserContext();
@@ -10,32 +12,10 @@ function Details() {
   const [strength, setStrength] = useState(['']);
   const [weakness, setWeakness] = useState(['']);
   const [education, setEducation] = useState(['']);
-  const [allPost, setAllPost] = useState({
-    interest: [],
-    history: [],
-    strength: [],
-    weakness: [],
-    education: [],
-  });
-
-  const settingPosts = () => {
-    setAllPost({
-      interest: interest,
-      history: history,
-      strength: strength,
-      weakness: weakness,
-      education: education,
-    });
-  };
 
   const submit = () => {
-    console.log("hi");
-    settingPosts();
+    postUserInfo(user, {interest, history, strength, weakness, education});
   };
-
-  useEffect(() => {
-    console.log(allPost);
-  }, [allPost]);
 
   return (
     <div className="w-[24rem] mt-10 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">

@@ -38,7 +38,8 @@ export const postInitialUserData = async (user: UserInterface) => {
 
     await setDoc(doc(collection(db, 'users')), {
         name: user.name,
-        email: user.email
+        email: user.email,
+        nodes: user.nodes
     })
 }
 
@@ -48,4 +49,17 @@ export const postInitialCareerData = async (user: UserInterface, careers: Career
     await updateDoc(userRef, {
         careers: careers
       });
+}
+
+export const postUserInfo = async (user: UserInterface, userInfo: any) => {
+    const authID = await filterUserID(user.email);
+    const userRef = doc(db, "users", authID);
+    const {interest, history, strength, weakness, education} = userInfo;
+    await updateDoc(userRef, {
+        interest: interest,
+        history: history,
+        strength: strength,
+        weakness: weakness,
+        education: education
+    });
 }
