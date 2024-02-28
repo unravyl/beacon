@@ -33,7 +33,7 @@ function Input({ title, post, setPost }) {
             >
               <input
                 type="text"
-                className="rounded-md w-full border-[#0c1323] bg-[#263965] shadow-sm border-2 text-white text-lg"
+                className="rounded-md w-full border-[#DAE0EC] bg-[#D6DEF0] shadow-sm border-2 text-white text-lg"
                 value={element}
                 onChange={(e) => handleInputChange(index, e.target.value)}
               />
