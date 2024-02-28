@@ -30,6 +30,7 @@ function page() {
 
     return (
         <div className="canvas-container">
+            {/* <div className="absolute w-[30px] h-[30px]"></div> */}
             <Graph width={windowSize.width} height={windowSize.height} />
         </div>
     )
