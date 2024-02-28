@@ -1,7 +1,7 @@
 import { getFirestore, setDoc, doc, collection, query, getDocs, updateDoc, where } from "firebase/firestore";
 import app from '@/db/firebase';
 import { UserInterface } from '@/interface/authInterface';
-import { CareerInterface } from '@/interface/CareerInterface';
+import { CareerInterface } from '@/interface/careerInterface';
 
 const db = getFirestore(app);
 
