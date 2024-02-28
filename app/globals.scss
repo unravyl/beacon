@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 body {
+  color: #0c1323;
+  background: #0c1323;
   margin: 0;
+  height: 100vh;
 }
 
 .canvas-container {
@@ -11,6 +14,11 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
+}
+
+.inputs > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .base-loading {
