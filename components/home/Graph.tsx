@@ -257,7 +257,7 @@ const Graph = ({ width = 600, height = 400 }) => {
             summary={()=>{ showSummary(selectedNode)}}
             expand={()=>{expandNode(selectedNode)}}
             />}
-            {showSidePanelModal && ( <Details close={()=>setShowSidePanelModal(false)} />)}
+            {showSidePanelModal && ( <Details details={{...selectedNode.details, title: selectedNode.label}} close={()=>setShowSidePanelModal(false)} />)}
         </>
     );
 };

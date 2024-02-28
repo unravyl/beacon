@@ -1,9 +1,10 @@
 import React from 'react'
 
-function Description() {
-    const description = [{title:'Position Title', info: 'Job Position Title'}, {title:'Description', info: 'sdfsadfsadfsdafsadf dsf dsf sdf sdf sdf sdfsd fds fds fds fds fds fadskfawek nadsnk aslfnasdl;knf lasd'},
-    {title:'Salary:', info: '1-2'},{title:'Top Companies Hiring', info: 'Hqzen Scalema'},
-    {title:'Qualification', info: 'Loewr kadsngk;adngkl ajdklfha sdklf kladshfklad sflk; sdf dsf sdf dsf dsfd sf sdf dsf sdf dsf dsf ds dsahfk ljads '}]
+function Description({details}) {
+
+    const description = [{title:'Position Title', info: details.title}, {title:'Description', info: details.description},
+    {title:'Salary:', info: details.salary},{title:'Top Companies Hiring', info: details.companies.join(', ')},
+    {title:'Qualification', info: details.qualifications.join(', ')}]
   return (
     <div className='flex flex-1 flex-col p-3 overflow-y-auto'>
         {description.map((item, index) => (

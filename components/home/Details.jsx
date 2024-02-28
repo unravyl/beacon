@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import Description from '@/components/generics/Description'
 
-function Details({close}) {
+function Details({details, close}) {
 
     return (
         <div className="relative flex justify-center items-center rounded-l-xl w-[65rem]">
@@ -13,7 +13,7 @@ function Details({close}) {
                         <i className=" bx bx-x text-md text-3xl text-white"></i>
                     </button>
                 </div>
-                < Description />
+                < Description details={details}/>
             </div>
         </div>
     )
