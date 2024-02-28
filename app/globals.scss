@@ -2,8 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
-  background-color: black;
+  margin: 0;
+}
+
+.canvas-container {
+  width: 100%;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.base-loading {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background-color: #d3d3d3;
+  border-radius: 5px;
+
+  &::after {
+      display: block;
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent);
+      animation: loading 1s infinite;
+  }
+}
+
+@keyframes loading {
+  100% {
+      transform: translateX(100%);
+  }
+}
+
+@keyframes rotate-square {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
