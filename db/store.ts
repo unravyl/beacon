@@ -88,6 +88,19 @@ export const updateUserNodes = async (user: UserInterface, setUser: Dispatch<Set
   await refreshUserData(user,setUser)
 }
 
+export const updateUserLinks = async (user: UserInterface, setUser: Dispatch<SetStateAction<UserInterface>>,newLinks: LinkInterface[]) => {
+  const authID = await filterUserID(user.email);
+  const userRef = doc(db, "users", authID);
+  const userSnap = await getDoc(userRef);
+  const userLinks = userSnap.data()?.links;
+
+  const updatedLinks = [...userLinks, ...newLinks];
+  await updateDoc(userRef, {
+    links: updatedLinks
+  })
+  await refreshUserData(user,setUser)
+}
+
 export const postInitialLinks = async (user: UserInterface, links: LinkInterface) => {
   const authID = await filterUserID(user.email);
   const userRef = doc(db, "users", authID);
