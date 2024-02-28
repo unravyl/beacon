@@ -3,12 +3,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import JobTitleModal from './JobTitleModal';
+import Details from '@/components/home/Details';
 import { set } from 'firebase/database';
 
-const Graph = ({ width = 600, height = 400 }) => {
+const Graph = ({ width = 600, height = 400}) => {
     const [showJobTitleModal, setShowJobTitleModal] = useState(false);
     const [showSidePanelModal, setShowSidePanelModal] = useState(false);
     const [selectedNode, setSelectedNode] = useState(null);
+
 
     // graph stuff
     const nodeColors = {
@@ -18,7 +20,8 @@ const Graph = ({ width = 600, height = 400 }) => {
     }
 
     const showSummary = (node) => {
-        console.log("show summary");
+        console.log("hello")
+        setShowSidePanelModal(true)
         setShowJobTitleModal(false);
     }
 
@@ -56,6 +59,7 @@ const Graph = ({ width = 600, height = 400 }) => {
             // job title
             setSelectedNode(d);
             setShowJobTitleModal(true);
+            setShowSidePanelModal(false)
         } else if (d.group === 3) {
             // upskill
             // insert nodes
@@ -253,9 +257,10 @@ const Graph = ({ width = 600, height = 400 }) => {
             <svg ref={svgRef} ></svg>
             {showJobTitleModal && <JobTitleModal title={selectedNode.label} width="300px" height="150px" 
             close={()=>{setShowJobTitleModal(false)}} 
-            summary={()=>{() => {showSummary(selectedNode)}}}
-            expand={()=>{() => {expandNode(selectedNode)}}}
+            summary={()=>{ showSummary(selectedNode)}}
+            expand={()=>{expandNode(selectedNode)}}
             />}
+            {showSidePanelModal && ( <Details close={()=>setShowSidePanelModal(false)} />)}
         </>
     );
 };
