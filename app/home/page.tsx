@@ -4,16 +4,23 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Graph from '@/components/home/Graph'
 import JobTitleModal from '@/components/home/JobTitleModal';
+import { refreshUserData } from '@/db/store';
+import { useUserContext } from '@/context/UserContext';
 
-function page() {
+function Page() {
+    const {user, setUser} = useUserContext();
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
     });
 
+    const handleUserRefresh = async () => {
+        await refreshUserData(user, setUser);
+    }
+
     useEffect(() => {
-        console.log(windowSize.width, windowSize.height);
-    })
+        handleUserRefresh();
+    }, [])
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,4 +49,4 @@ function page() {
     )
 }
 
-export default page
+export default Page

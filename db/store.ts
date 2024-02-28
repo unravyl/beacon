@@ -27,7 +27,8 @@ export const refreshUserData = async (user: UserInterface, setUser: Dispatch<Set
     const userRef = doc(db, "users", authID);
     const userSnap = await getDoc(userRef);
     const updatedUserData = userSnap.data();
-    setUser({...user, nodes:updatedUserData?.nodes, links: updatedUserData?.links});
+    console.log('LOGG', updatedUserData?.nodes);
+    setUser({...user, nodes: updatedUserData?.nodes, links: updatedUserData?.links});
 }
 
 export const postInitialUserData = async (user: UserInterface) => {
@@ -74,7 +75,7 @@ export const postUserInfo = async (user: UserInterface, userInfo: any) => {
     });
 }
 
-export const updateUserNodes = async (user: UserInterface, newNodes: NodeInterface[]) => {
+export const updateUserNodes = async (user: UserInterface, setUser: Dispatch<SetStateAction<UserInterface>>,newNodes: NodeInterface[]) => {
   const authID = await filterUserID(user.email);
   const userRef = doc(db, "users", authID);
   const userSnap = await getDoc(userRef);
@@ -84,6 +85,7 @@ export const updateUserNodes = async (user: UserInterface, newNodes: NodeInterfa
   await updateDoc(userRef, {
     nodes: updatedNodes
   })
+  await refreshUserData(user,setUser)
 }
 
 export const postInitialLinks = async (user: UserInterface, links: LinkInterface) => {

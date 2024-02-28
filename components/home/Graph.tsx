@@ -5,8 +5,10 @@ import * as d3 from 'd3';
 import JobTitleModal from './JobTitleModal';
 import Details from '@/components/home/Details';
 import { set } from 'firebase/database';
+import { useUserContext } from '@/context/UserContext';
 
-const Graph = ({ width = 600, height = 400}) => {
+const Graph = ({ width = 600, height = 400 }) => {
+    const {user, setUser} = useUserContext();
     const [showJobTitleModal, setShowJobTitleModal] = useState(false);
     const [showSidePanelModal, setShowSidePanelModal] = useState(false);
     const [selectedNode, setSelectedNode] = useState(null);
@@ -32,23 +34,10 @@ const Graph = ({ width = 600, height = 400}) => {
 
     const svgRef = useRef();
     const [nodeList, setNodeList] = useState(
-        [
-            { id: 'Node 2', label: 'SELF', group: 1 },
-            { id: 'Node 1', label: 'Software engineer', group: 2 },
-            { id: 'Node 4', label: 'Fullstack developer', group: 2 },
-            { id: 'Node 5', label: 'UI/UX Designer', group: 2 },
-            { id: 'Node 3', label: 'Hackerman', group: 2 },
-            { id: 'Node 6', label: 'Professor', group: 2 },
-        ]
+        user.nodes
     );
     const [linksList, setLinksList] = useState(
-        [
-            { source: 'Node 1', target: 'Node 2' },
-            { source: 'Node 3', target: 'Node 2' },
-            { source: 'Node 4', target: 'Node 2' },
-            { source: 'Node 5', target: 'Node 2' },
-            { source: 'Node 6', target: 'Node 2' },
-        ]
+        user.links
     );
     const [showSidePanel, setShowSidePanel] = useState(false);
 
@@ -90,164 +79,172 @@ const Graph = ({ width = 600, height = 400}) => {
         // localStorage.setItem('linksList', JSON.stringify(localStorageLinks))
     }
 
+    // useEffect(() => {
+    //     if (localStorage.getItem('nodeList')) {
+    //         setNodeList(JSON.parse(localStorage.getItem('nodeList')))
+    //     } else {
+    //         localStorage.setItem('nodeList', JSON.stringify(nodeList))
+    //     }
+
+    //     if (localStorage.getItem('linksList')) {
+    //         setLinksList(JSON.parse(localStorage.getItem('linksList')))
+    //     } else {
+    //         console.log(linksList);
+    //         localStorage.setItem('linksList', JSON.stringify(linksList))
+    //     }
+    // }, []);
+
     useEffect(() => {
-        if (localStorage.getItem('nodeList')) {
-            setNodeList(JSON.parse(localStorage.getItem('nodeList')))
-        } else {
-            localStorage.setItem('nodeList', JSON.stringify(nodeList))
-        }
-
-        if (localStorage.getItem('linksList')) {
-            setLinksList(JSON.parse(localStorage.getItem('linksList')))
-        } else {
-            console.log(linksList);
-            localStorage.setItem('linksList', JSON.stringify(linksList))
-        }
-    }, []);
+        setNodeList(user.nodes);
+        setLinksList(user.links);
+    }, [user])
 
     useEffect(() => {
-        function wrap(text, width) {
-            text.each(function () {
-                var text = d3.select(this),
-                    words = text.text().split(/\s+/).reverse(),
-                    word,
-                    line = [],
-                    lineNumber = 0,
-                    lineHeight = 1.1,
-                    y = text.attr("y"),
-                    dy = parseFloat(text.attr("dy")),
-                    tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-
-                while (word = words.pop()) {
-                    line.push(word);
-                    tspan.text(line.join(" "));
-                    if (tspan.node().getComputedTextLength() > width) {
-                        line.pop();
+        console.log('HATDOGGGGGGGG', linksList, nodeList);
+        if (linksList?.length && nodeList.length > 1) {
+            function wrap(text, width) {
+                text.each(function () {
+                    var text = d3.select(this),
+                        words = text.text().split(/\s+/).reverse(),
+                        word,
+                        line = [],
+                        lineNumber = 0,
+                        lineHeight = 1.1,
+                        y = text.attr("y"),
+                        dy = parseFloat(text.attr("dy")),
+                        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+    
+                    while (word = words.pop()) {
+                        line.push(word);
                         tspan.text(line.join(" "));
-                        line = [word];
-                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${lineNumber * lineHeight + 1}em`).text(word);
+                        if (tspan.node().getComputedTextLength() > width) {
+                            line.pop();
+                            tspan.text(line.join(" "));
+                            line = [word];
+                            tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${lineNumber * lineHeight + 1}em`).text(word);
+                        }
                     }
-                }
+                });
+            }
+    
+            
+            const svg = d3.select(svgRef.current)
+                .attr('width', width)
+                .attr('height', height)
+                .style('background-color', '#0C1323')
+                .call(d3.zoom().on("zoom", (event) => {
+                    container.attr("transform", event.transform);
+                }));
+    
+            let container = svg.select("g");
+            if (container.empty()) {
+                container = svg.append("g");
+            } else {
+                container.selectAll("*").remove();
+            }
+    
+    
+            const nodes = nodeList;
+    
+            const links = linksList;
+    
+            const link = container.selectAll(".link")
+                .data(links)
+                .enter().append("line")
+                .attr("class", "link")
+                .style("stroke-width", 1)
+                .style("stroke", "#ffffff");
+    
+            const drag = d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+    
+            const node = container.selectAll(".node")
+                .data(nodes)
+                .enter().append("g")
+                .call(drag)
+                .on("click", (event, d) => {
+                    console.log("Node clicked:", d);
+                    event.stopPropagation()
+                    handleNodeClick(d)
+                })
+                .style("cursor", "pointer")
+                .attr("class", "node");
+    
+            node.append("text")
+                .text(d => d.label)
+                .style("text-anchor", "middle")
+                .style("fill", "#fff")
+                .attr("dy", "0.5em")
+                .attr("class", "node")
+                .call(wrap, 220);
+    
+            node.each(function(d) {
+                const bbox = this.getBBox();
+                const padding = 4;
+                d.width = Math.max(d.width, bbox.width + 2 * padding);
+                d.height = bbox.height + 2 * padding;
             });
-        }
-
-        
-        const svg = d3.select(svgRef.current)
-            .attr('width', width)
-            .attr('height', height)
-            .style('background-color', '#0C1323')
-            .call(d3.zoom().on("zoom", (event) => {
-                container.attr("transform", event.transform);
-            }));
-
-        let container = svg.select("g");
-        if (container.empty()) {
-            container = svg.append("g");
-        } else {
-            container.selectAll("*").remove();
-        }
-
-
-        const nodes = nodeList;
-
-        const links = linksList;
-
-        const link = container.selectAll(".link")
-            .data(links)
-            .enter().append("line")
-            .attr("class", "link")
-            .style("stroke-width", 1)
-            .style("stroke", "#ffffff");
-
-        const drag = d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
-
-        const node = container.selectAll(".node")
-            .data(nodes)
-            .enter().append("g")
-            .call(drag)
-            .on("click", (event, d) => {
-                console.log("Node clicked:", d);
-                event.stopPropagation()
-                handleNodeClick(d)
-            })
-            .style("cursor", "pointer")
-            .attr("class", "node");
-
-        node.append("text")
-            .text(d => d.label)
-            .style("text-anchor", "middle")
-            .style("fill", "#fff")
-            .attr("dy", "0.5em")
-            .attr("class", "node")
-            .call(wrap, 220);
-
-        node.each(function(d) {
-            const bbox = this.getBBox();
-            const padding = 4;
-            d.width = Math.max(d.width, bbox.width + 2 * padding);
-            d.height = bbox.height + 2 * padding;
-        });
-
-        node.selectAll("text").each(function(d) {
-            const bbox = this.getBBox();
-            const padding = 15;
-            d.width = bbox.width + 2 * padding;
-            d.height = bbox.height + 2 * padding;
-        
-            d3.select(this).attr("y", -d.height / 2 + padding + (bbox.height / 4));
-        });
-
-        node.insert("rect", "text")
-            .style("fill", d => nodeColors[d.group]? nodeColors[d.group] : "#69b3a2")
-            .style("stroke", "#fff")
-            .style("stroke-width", 1)
-            .attr("width", d => d.width)
-            .attr("height", d => d.height)
-            .attr("x", d => -d.width / 2)
-            .attr("y", d => -d.height / 2)
-            .attr("rx", 10)
-            .attr("ry", 10);
-        
-        node.selectAll("rect")
-            .attr("width", d => d.width)
-            .attr("height", d => d.height)
-            .attr("x", d => -d.width / 2)
-            .attr("y", d => -d.height / 2);
-
-        const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(200))
-            .force("charge", d3.forceManyBody().strength(-1500))
-            .force("center", d3.forceCenter(width / 2, height / 2));
-
-        simulation.on("tick", () => {
-            link
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
-
-            node
-                .attr("transform", d => `translate(${d.x},${d.y})`);
-        });
-
-        function dragstarted(event, d) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function dragged(event, d) {
-            d.fx = event.x;
-            d.fy = event.y;
-        }
-
-        function dragended(event, d) {
-            if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
+    
+            node.selectAll("text").each(function(d) {
+                const bbox = this.getBBox();
+                const padding = 15;
+                d.width = bbox.width + 2 * padding;
+                d.height = bbox.height + 2 * padding;
+            
+                d3.select(this).attr("y", -d.height / 2 + padding + (bbox.height / 4));
+            });
+    
+            node.insert("rect", "text")
+                .style("fill", d => nodeColors[d.group]? nodeColors[d.group] : "#69b3a2")
+                .style("stroke", "#fff")
+                .style("stroke-width", 1)
+                .attr("width", d => d.width)
+                .attr("height", d => d.height)
+                .attr("x", d => -d.width / 2)
+                .attr("y", d => -d.height / 2)
+                .attr("rx", 10)
+                .attr("ry", 10);
+            
+            node.selectAll("rect")
+                .attr("width", d => d.width)
+                .attr("height", d => d.height)
+                .attr("x", d => -d.width / 2)
+                .attr("y", d => -d.height / 2);
+    
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+                .force("charge", d3.forceManyBody().strength(-1500))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+    
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+    
+                node
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+    
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+    
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+    
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
         }
 
     }, [width, height, nodeList, linksList]);

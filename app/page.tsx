@@ -12,14 +12,16 @@ export default function Home() {
   const router = useRouter()
 
   const handleLoginButtonClick = async () => {
-    handleSignIn(setUser, setIsLoggedIn)
+    handleSignIn(user, setUser, setIsLoggedIn)
   }
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if(isLoggedIn && user.links){
+      router.push('/home')
+    } else if (isLoggedIn) {
       router.push('/register');
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, router, user.links])
 
   return (
     <main className="flex flex-col items-center h-full bg-center text-white bg-[url('../assets/icons/LandPageBG.svg')] " >

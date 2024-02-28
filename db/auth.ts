@@ -2,12 +2,12 @@ import app from '@/db/firebase';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { UserInterface } from '@/interface/authInterface';
 import { Dispatch, SetStateAction } from 'react';
-import { postInitialUserData } from './store';
+import { postInitialUserData, refreshUserData } from './store';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
 
-export const handleSignIn = async (setUser: Dispatch<SetStateAction<UserInterface>>, setIsLoggedIn: Dispatch<SetStateAction<boolean>>) => {
+export const handleSignIn = async (currentUser: UserInterface, setUser: Dispatch<SetStateAction<UserInterface>>, setIsLoggedIn: Dispatch<SetStateAction<boolean>>) => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
@@ -26,6 +26,8 @@ export const handleSignIn = async (setUser: Dispatch<SetStateAction<UserInterfac
           }
           postInitialUserData(userData);
           setUser(userData);
+        } else {
+          refreshUserData(currentUser, setUser)
         }
         setIsLoggedIn(true);
       }).catch((error) => {
