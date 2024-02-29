@@ -1,18 +1,25 @@
 "use client";
-import { React } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-function Input({ title, post, setPost }) {
+interface PropsInterface {
+  title: string;
+  post: string[];
+  setPost: Dispatch<SetStateAction<string[]>>;
+}
+
+function Input(props: Readonly<PropsInterface>) {
+  const {title, post, setPost} = props;
   const addInput = () => {
     setPost([...post, ""]);
   };
 
-  const removeInput = (index) => {
+  const removeInput = (index: number) => {
     const updatedInputs = [...post];
     updatedInputs.splice(index, 1);
     setPost(updatedInputs);
   };
 
-  const handleInputChange = (index, value) => {
+  const handleInputChange = (index:number, value:string) => {
     const updatedPost = [...post];
     updatedPost[index] = value;
     setPost(updatedPost);
@@ -28,7 +35,7 @@ function Input({ title, post, setPost }) {
         <div className="w-full flex flex-col gap-2 items-center justify-center">
           {post.map((element, index) => (
             <div
-              key={index}
+              key={element.concat(index.toString())}
               className="w-full flex items-center justify-center"
             >
               <input

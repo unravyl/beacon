@@ -1,8 +1,16 @@
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 import Description from '@/components/generics/Description'
 
-function Details({details, close}) {
+interface PropsInterface {
+    close: () => void;
+    details:{
+        title: string;
+        description: string
+    };
+}
+
+function Details({details, close}: Readonly<PropsInterface>) {
 
     return (
         <div className="relative flex justify-center items-center rounded-l-xl w-[65rem]">

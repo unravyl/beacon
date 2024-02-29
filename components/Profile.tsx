@@ -1,23 +1,31 @@
 "use client";
-import { React, useEffect, useState } from "react";
+import { useState } from "react";
 import { useUserContext } from "@/context/UserContext";
+
+interface FieldInterface {
+    [key: string]: string   
+}
+
+interface EditModeInterface {
+    [key: string]: boolean
+}
 
 const inputFields = ["Interests", "Career History", "Educational Background", "Strengths", "Weaknesses"]
 
 function Details() {
-    const { user, setUser } = useUserContext();
-    const [editMode, setEditMode] = useState({});
-    const [fieldValues, setFieldValues] = useState({});
+    const { setUser } = useUserContext();
+    const [editMode, setEditMode] = useState({} as EditModeInterface);
+    const [fieldValues, setFieldValues] = useState({} as FieldInterface);
 
-    const handleEditClick = (field) => {
+    const handleEditClick = (field: string) => {
         setEditMode(prevEditMode => ({ ...prevEditMode, [field]: true }));
     };
 
-    const handleInputChange = (field, value) => {
+    const handleInputChange = (field: string, value: string) => {
         setFieldValues(prevFieldValues => ({ ...prevFieldValues, [field]: value }));
     };
 
-    const handleSaveClick = (field) => {
+    const handleSaveClick = (field:string) => {
         // Update the user data with the new value
         setUser(prevUser => ({ ...prevUser, [field]: fieldValues[field] }));
         // Set edit mode to false
@@ -32,8 +40,8 @@ function Details() {
             <div className="text-xs mt-[-6px]">Email</div>
 
             <div className="w-[20rem] mt-8">
-                {inputFields.map((input, index) => (
-                    <div key={index} className="flex flex-col">
+                {inputFields.map((input:string, index) => (
+                    <div key={input} className="flex flex-col">
                         <div className="flex flex-row justify-between text-xs items-center">
                             <h1>{input.toUpperCase()}</h1>
                         </div>

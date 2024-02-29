@@ -101,7 +101,7 @@ export const updateUserLinks = async (user: UserInterface, setUser: Dispatch<Set
   await refreshUserData(user,setUser)
 }
 
-export const postInitialLinks = async (user: UserInterface, links: LinkInterface) => {
+export const postInitialLinks = async (user: UserInterface, links: LinkInterface[]) => {
   const authID = await filterUserID(user.email);
   const userRef = doc(db, "users", authID);
   await updateDoc(userRef, {

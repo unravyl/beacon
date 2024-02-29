@@ -1,12 +1,13 @@
 "use client";
 
-import { React, useState } from "react";
+import { useState } from "react";
 import Input from "@/components/generics/Input.jsx";
 import { useUserContext } from '@/context/UserContext';
 import { postInitialLinks, postUserInfo, refreshUserData, updateUserNodes } from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from "@/components/generics/Spinner";
+import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
 
 function Details() {
   const router = useRouter();
@@ -23,8 +24,8 @@ function Details() {
       postUserInfo(user, {interest, history, strength, weakness, education});
       const {data} = await axios.post('http://127.0.0.1:8000/api/generate-top-careers/', {interest, history, strength, weakness, education});
       updateUserNodes(user, setUser, data.response);
-      let links = []
-      data.response.forEach((item) => {
+      let links: LinkInterface[] = []
+      data.response.forEach((item: NodeInterface) => {
         links.push({source: "Node 1", target: item.id})
       })
       postInitialLinks(user, links);

@@ -6,36 +6,34 @@ import * as d3 from 'd3';
 import JobTitleModal from './JobTitleModal';
 import Details from '@/components/home/Details';
 import SimpleSidePanel from '@/components/home/SimpleSidePanel';
-
-import { set } from 'firebase/database';
+ 
 import { useUserContext } from '@/context/UserContext';
 import axios from 'axios'
 import Spinner from '@/components/generics/Spinner'
 import { updateUserLinks, updateUserNodes } from '@/db/store';
+import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
 
 const Graph = ({ width = 600, height = 400 }) => {
     const {user, setUser} = useUserContext();
     const [showJobTitleModal, setShowJobTitleModal] = useState(false);
     const [showSidePanelModal, setShowSidePanelModal] = useState(false);
     const [showSimpleSidePanel, setShowSimpleSidePanel] = useState(false);
-    const [selectedNode, setSelectedNode] = useState(null);
+    const [selectedNode, setSelectedNode] = useState({} as NodeInterface);
     const [isLoading, setIsLoading] = useState(false);
-
 
     // graph stuff
     const nodeColors = {
         1: '#69b3a2',
-        2: '#2c2769',
+        2: '#274069',
         3: '#32CD32',
     }
 
-    const showSummary = (node) => {
-        console.log("hello")
+    const showSummary = (node: NodeInterface) => {
         setShowSidePanelModal(true)
         setShowJobTitleModal(false);
     }
 
-    const expandNode = async (node) => {
+    const expandNode = async (node: NodeInterface) => {
         setIsLoading(true);
         setShowJobTitleModal(false);
         const response = await axios.post('http://127.0.0.1:8000/api/generate-upskilling/', {career: node.label})
@@ -91,43 +89,7 @@ const Graph = ({ width = 600, height = 400 }) => {
             // requirements
             // show side panel
         }
-        // const newNode = {
-        //     id: `Node ${nodeList.length + 1}`,
-        //     label: `Node ${nodeList.length + 1} dsfasd fsdafs dfds afd fdsaf dfsa`,
-        //     group: d.group + 1,
-        //     x: d.x + (Math.random() - 0.5) * 100,
-        //     y: d.y + (Math.random() - 0.5) * 100,
-        // }
-        // setNodeList([...nodeList, newNode])
-        // localStorage.setItem('nodeList', JSON.stringify([...nodeList, newNode]))
-
-        // const newLink = {
-        //     source: newNode.id,
-        //     target: d.id
-        // }
-        // const localStorageLinks = linksList.map(link => {
-        //     return { source: link.source.id, target: link.target.id }
-        // })
-        // localStorageLinks.push(newLink);
-        // const newList = [...linksList, newLink]
-        // setLinksList(newList)
-        // localStorage.setItem('linksList', JSON.stringify(localStorageLinks))
     }
-
-    // useEffect(() => {
-    //     if (localStorage.getItem('nodeList')) {
-    //         setNodeList(JSON.parse(localStorage.getItem('nodeList')))
-    //     } else {
-    //         localStorage.setItem('nodeList', JSON.stringify(nodeList))
-    //     }
-
-    //     if (localStorage.getItem('linksList')) {
-    //         setLinksList(JSON.parse(localStorage.getItem('linksList')))
-    //     } else {
-    //         console.log(linksList);
-    //         localStorage.setItem('linksList', JSON.stringify(linksList))
-    //     }
-    // }, []);
 
     useEffect(() => {
         setNodeList(user.nodes);
@@ -135,7 +97,6 @@ const Graph = ({ width = 600, height = 400 }) => {
     }, [user])
 
     useEffect(() => {
-        console.log('HATDOGGGGGGGG', linksList, nodeList);
         if (linksList?.length && nodeList.length > 1) {
             function wrap(text, width) {
                 text.each(function () {
@@ -179,9 +140,9 @@ const Graph = ({ width = 600, height = 400 }) => {
             }
     
     
-            const nodes = nodeList;
+            const nodes: NodeInterface[] = nodeList;
     
-            const links = linksList;
+            const links: LinkInterface[] = linksList;
     
             const link = container.selectAll(".link")
                 .data(links)
@@ -298,5 +259,6 @@ const Graph = ({ width = 600, height = 400 }) => {
         </>
     );
 };
+
 
 export default Graph;
