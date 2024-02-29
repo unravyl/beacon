@@ -27,6 +27,11 @@ const Graph = ({ width = 600, height = 400 }) => {
         2: '#274069',
         3: '#32CD32',
     }
+    const nodeTextColors = {
+        1: '#fff',
+        2: '#fff',
+        3: '#274069',
+    }
 
     const showSummary = (node: NodeInterface) => {
         setShowSidePanelModal(true)
@@ -170,8 +175,9 @@ const Graph = ({ width = 600, height = 400 }) => {
     
             node.append("text")
                 .text(d => d.label)
+                
                 .style("text-anchor", "middle")
-                .style("fill", "#fff")
+                .style("fill", d => nodeTextColors[d.group]? nodeTextColors[d.group] : "#000")
                 .attr("dy", "0.5em")
                 .attr("class", "node")
                 .call(wrap, 220);
