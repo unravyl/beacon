@@ -14,7 +14,7 @@ function Description(props: Readonly<PropsInterface>) {
     const { details } = props;
 
     const description = [{title:'Position Title', info: details.title}, {title:'Description', info: details.description},
-    {title:'Salary:', info: details.salary},{title:'Top Companies Hiring', info: details.companies.join(', ')},
+    {title:'Salary', info: details.salary},{title:'Top Companies Hiring', info: details.companies.join(', ')},
     {title:'Qualification', info: details.qualifications.join(', ')}]
   return (
     <div className='flex flex-1 flex-col p-3 overflow-y-auto'>

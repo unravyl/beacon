@@ -6,7 +6,10 @@ interface PropsInterface {
     close: () => void;
     details:{
         title: string;
-        description: string
+        salary: string;
+        description: string;
+        companies: string[];
+        qualifications: string[];
     };
 }
 
