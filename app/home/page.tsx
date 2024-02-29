@@ -3,7 +3,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import Graph from '@/components/home/Graph'
-import JobTitleModal from '@/components/home/JobTitleModal';
 import { refreshUserData } from '@/db/store';
 import { useUserContext } from '@/context/UserContext';
 

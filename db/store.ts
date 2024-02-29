@@ -59,7 +59,7 @@ export const postInitialCareerData = async (user: UserInterface, careers: Career
     const userRef = doc(db, "users", authID);
     await updateDoc(userRef, {
         careers: careers
-      });
+    });
 }
 
 export const postUserInfo = async (user: UserInterface, userInfo: any) => {
@@ -98,7 +98,7 @@ export const updateUserLinks = async (user: UserInterface, setUser: Dispatch<Set
   await updateDoc(userRef, {
     links: updatedLinks
   })
-  await refreshUserData(user,setUser)
+  await refreshUserData(user, setUser)
 }
 
 export const postInitialLinks = async (user: UserInterface, links: LinkInterface[]) => {

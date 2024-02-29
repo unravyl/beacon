@@ -7,7 +7,7 @@ interface PropsInterface {
   setPost: Dispatch<SetStateAction<string[]>>;
 }
 
-function Input(props: Readonly<PropsInterface>) {
+function Input(props: PropsInterface) {
   const {title, post, setPost} = props;
   const addInput = () => {
     setPost([...post, ""]);
@@ -35,7 +35,7 @@ function Input(props: Readonly<PropsInterface>) {
         <div className="w-full flex flex-col gap-2 items-center justify-center">
           {post.map((element, index) => (
             <div
-              key={element.concat(index.toString())}
+              key={index}
               className="w-full flex items-center justify-center"
             >
               <input

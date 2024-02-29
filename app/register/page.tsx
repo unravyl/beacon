@@ -1,5 +1,5 @@
 import React from "react";
-import Register from "../../components/Register.jsx";
+import Register from "../../components/Register";
 
 function page() {
   return (

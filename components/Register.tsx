@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Input from "@/components/generics/Input.jsx";
+import Input from "@/components/generics/Input";
 import { useUserContext } from '@/context/UserContext';
 import { postInitialLinks, postUserInfo, refreshUserData, updateUserNodes } from '@/db/store';
 import axios from 'axios';
