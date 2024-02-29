@@ -1,5 +1,5 @@
-"use client";
-import { Dispatch, SetStateAction } from "react";
+'use client';
+import { Dispatch, SetStateAction } from 'react';
 
 interface PropsInterface {
   title: string;
@@ -8,9 +8,9 @@ interface PropsInterface {
 }
 
 function Input(props: PropsInterface) {
-  const {title, post, setPost} = props;
+  const { title, post, setPost } = props;
   const addInput = () => {
-    setPost([...post, ""]);
+    setPost([...post, '']);
   };
 
   const removeInput = (index: number) => {
@@ -19,7 +19,7 @@ function Input(props: PropsInterface) {
     setPost(updatedInputs);
   };
 
-  const handleInputChange = (index:number, value:string) => {
+  const handleInputChange = (index: number, value: string) => {
     const updatedPost = [...post];
     updatedPost[index] = value;
     setPost(updatedPost);
@@ -44,7 +44,10 @@ function Input(props: PropsInterface) {
                 value={element}
                 onChange={(e) => handleInputChange(index, e.target.value)}
               />
-              <button onClick={() => removeInput(index)} className="border-[0.001rem] border-transparent flex items-center justify-center h-[1rem] rounded-full hover:border-[#0c1323]">
+              <button
+                onClick={() => removeInput(index)}
+                className="border-[0.001rem] border-transparent flex items-center justify-center h-[1rem] rounded-full hover:border-[#0c1323]"
+              >
                 <i className="bx bx-x text-md"></i>
               </button>
             </div>
@@ -53,7 +56,7 @@ function Input(props: PropsInterface) {
       </div>
 
       {post.length < 5 && (
-        <button onClick={addInput} >
+        <button onClick={addInput}>
           <div className=" flex items-center justify-center h-[1rem] ">
             <i className="bx bx-plus border-[0.001rem] rounded-full mt-2 border-transparent hover:border-[#0c1323]"></i>
           </div>

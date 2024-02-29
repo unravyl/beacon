@@ -1,17 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Input from "@/components/generics/Input";
+import { useState } from 'react';
+import Input from '@/components/generics/Input';
 import { useUserContext } from '@/context/UserContext';
-import { postInitialLinks, postUserInfo, refreshUserData, updateUserNodes } from '@/db/store';
+import {
+  postInitialLinks,
+  postUserInfo,
+  refreshUserData,
+  updateUserNodes,
+} from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import Spinner from "@/components/generics/Spinner";
+import Spinner from '@/components/generics/Spinner';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
 
 function Details() {
   const router = useRouter();
-  const {user, setUser} = useUserContext();
+  const { user, setUser } = useUserContext();
   const [interest, setInterest] = useState(['']);
   const [history, setHistory] = useState(['']);
   const [strength, setStrength] = useState(['']);
@@ -20,17 +25,20 @@ function Details() {
   const [isLoading, setIsLoading] = useState(false);
 
   const submit = async () => {
-      setIsLoading(true);
-      postUserInfo(user, {interest, history, strength, weakness, education});
-      const {data} = await axios.post('http://127.0.0.1:8000/api/generate-top-careers/', {interest, history, strength, weakness, education});
-      updateUserNodes(user, setUser, data.response);
-      let links: LinkInterface[] = []
-      data.response.forEach((item: NodeInterface) => {
-        links.push({source: "Node 1", target: item.id})
-      })
-      postInitialLinks(user, links);
-      refreshUserData(user, setUser)
-      router.push('/home');
+    setIsLoading(true);
+    postUserInfo(user, { interest, history, strength, weakness, education });
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-top-careers/',
+      { interest, history, strength, weakness, education }
+    );
+    updateUserNodes(user, setUser, data.response);
+    let links: LinkInterface[] = [];
+    data.response.forEach((item: NodeInterface) => {
+      links.push({ source: 'Node 1', target: item.id });
+    });
+    postInitialLinks(user, links);
+    refreshUserData(user, setUser);
+    router.push('/home');
   };
 
   return (
@@ -50,7 +58,7 @@ function Details() {
         className="bg-[#0c1323] mt-4 rounded-md text-white px-4 py-1"
         onClick={submit}
       >
-        Submit{" "}
+        Submit{' '}
       </button>
     </div>
   );

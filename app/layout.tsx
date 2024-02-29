@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.scss";
-import { UserWrapper } from "@/context/UserContext";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.scss';
+import { UserWrapper } from '@/context/UserContext';
 import { AuthWrapper } from '@/context/AuthContext';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Beacon",
-  description: "Personalize Career App",
+  title: 'Beacon',
+  description: 'Personalize Career App',
 };
 
 export default function RootLayout({
@@ -32,7 +32,11 @@ export default function RootLayout({
       </head>
       <AuthWrapper>
         <UserWrapper>
-          <body className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}>{children}</body>
+          <body
+            className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
+          >
+            {children}
+          </body>
         </UserWrapper>
       </AuthWrapper>
     </html>
