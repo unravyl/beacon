@@ -3,7 +3,7 @@ import { NodeInterface, LinkInterface } from './graphInterface';
 export interface UserInterface {
   name: string;
   email: string;
-  nodes: NodeInterface[];
+  nodes?: NodeInterface[];
   links?: LinkInterface[];
   interest?: string[];
   history?: string[];

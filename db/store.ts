@@ -17,7 +17,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 const db = getFirestore(app);
 
-const filterUserID = async (authEmail: string) => {
+export const filterUserID = async (authEmail: string) => {
   const userQuery = query(
     collection(db, 'users'),
     where('email', '==', authEmail)
@@ -33,6 +33,34 @@ const filterUserID = async (authEmail: string) => {
   });
 
   return authID;
+};
+
+export const getSingleUser = async (authEmail: string) => {
+  const userQuery = query(
+    collection(db, 'users'),
+    where('email', '==', authEmail)
+  );
+  const userSnapshot = await getDocs(userQuery);
+  let user = {} as UserInterface;
+  userSnapshot.forEach((u) => {
+    const userData = u.data();
+    if (userData.email == authEmail) {
+      user.name = userData.name;
+      user.email = userData.email;
+      user.links = userData.links;
+    }
+  });
+
+  return user;
+};
+
+export const doesUserExist = async (authEmail: string) => {
+  const doesAccountExist = await filterUserID(authEmail);
+  if (doesAccountExist == '') {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 export const refreshUserData = async (

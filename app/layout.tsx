@@ -2,13 +2,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { UserWrapper } from '@/context/UserContext';
-import { AuthWrapper } from '@/context/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Beacon',
-  description: 'Personalize Career App',
+  description: 'Personalize Career AI App',
 };
 
 export default function RootLayout({
@@ -30,15 +29,13 @@ export default function RootLayout({
           rel="stylesheet"
         ></link>
       </head>
-      <AuthWrapper>
-        <UserWrapper>
-          <body
-            className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
-          >
-            {children}
-          </body>
-        </UserWrapper>
-      </AuthWrapper>
+      <UserWrapper>
+        <body
+          className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
+        >
+          {children}
+        </body>
+      </UserWrapper>
     </html>
   );
 }

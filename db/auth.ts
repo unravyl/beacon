@@ -7,21 +7,36 @@ import {
 } from 'firebase/auth';
 import { UserInterface } from '@/interface/authInterface';
 import { Dispatch, SetStateAction } from 'react';
-import { postInitialUserData, refreshUserData } from './store';
+import {
+  doesUserExist,
+  filterUserID,
+  getSingleUser,
+  postInitialUserData,
+  refreshUserData,
+} from './store';
+import { NodeInterface } from '@/interface/graphInterface';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
 
+interface UserDataInterface {
+  name: string;
+  email: string;
+  nodes: NodeInterface[];
+}
+
 export const handleSignIn = async (
   currentUser: UserInterface,
   setUser: Dispatch<SetStateAction<UserInterface>>,
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>
+  setHasAccount: Dispatch<SetStateAction<boolean>>,
+  setHasAccounData: Dispatch<SetStateAction<boolean>>
 ) => {
-  signInWithPopup(auth, provider)
+  let userData = {} as UserDataInterface;
+  await signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
       if (user.displayName && user.email) {
-        let userData = {
+        userData = {
           name: user.displayName,
           email: user.email,
           nodes: [
@@ -35,19 +50,28 @@ export const handleSignIn = async (
             },
           ],
         };
-        postInitialUserData(userData);
-        setUser(userData);
-      } else {
-        refreshUserData(currentUser, setUser);
       }
-      setIsLoggedIn(true);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error(errorCode, errorMessage);
-    })
-    .finally(() => {});
+    });
+
+  if (userData) {
+    const existingUser = await getSingleUser(userData.email);
+    if (existingUser.email) {
+      if (existingUser.links?.length) {
+        refreshUserData(userData, setUser);
+        setHasAccounData(true);
+        return;
+      }
+    } else {
+      postInitialUserData(userData);
+    }
+    setUser(userData);
+    setHasAccount(true);
+  }
 };
 
 export const handleSignOut = () => {

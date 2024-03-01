@@ -1,14 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from '@/components/generics/Input';
 import { useUserContext } from '@/context/UserContext';
-import {
-  postInitialLinks,
-  postUserInfo,
-  refreshUserData,
-  updateUserNodes,
-} from '@/db/store';
+import { postInitialLinks, postUserInfo, updateUserNodes } from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
@@ -23,6 +18,7 @@ function Details() {
   const [weakness, setWeakness] = useState(['']);
   const [education, setEducation] = useState(['']);
   const [isLoading, setIsLoading] = useState(false);
+  const [canSubmitUserData, setCanSubmitUserData] = useState(true);
 
   const submit = async () => {
     setIsLoading(true);
@@ -37,9 +33,20 @@ function Details() {
       links.push({ source: 'Node 1', target: item.id });
     });
     postInitialLinks(user, links);
-    refreshUserData(user, setUser);
     router.push('/home');
   };
+
+  useEffect(() => {
+    if (
+      user.education?.length ||
+      user.interest?.length ||
+      user.history?.length ||
+      user.strength?.length ||
+      user.weakness?.length
+    ) {
+      setCanSubmitUserData(false);
+    }
+  }, [user]);
 
   return (
     <div className="w-[24rem] mt-4 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
@@ -57,8 +64,9 @@ function Details() {
       <button
         className="bg-[#0c1323] mt-4 rounded-md text-white px-4 py-1"
         onClick={submit}
+        disabled={canSubmitUserData}
       >
-        Submit{' '}
+        Submit
       </button>
     </div>
   );

@@ -1,30 +1,34 @@
 'use client';
 
+import Spinner from '@/components/generics/Spinner';
 import { useUserContext } from '@/context/UserContext';
-import { useAuthContext } from '@/context/AuthContext';
 import { handleSignIn } from '@/db/auth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { user, setUser } = useUserContext();
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const [hasAccount, setHasAccount] = useState(false);
+  const [hasAccountData, setHasAccountData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLoginButtonClick = async () => {
-    handleSignIn(user, setUser, setIsLoggedIn);
+    await handleSignIn(user, setUser, setHasAccount, setHasAccountData);
+    setIsLoading(true);
   };
 
   useEffect(() => {
-    if (isLoggedIn && user.links) {
+    if (hasAccountData) {
       router.push('/home');
-    } else if (isLoggedIn) {
+    } else if (hasAccount) {
       router.push('/register');
     }
-  }, [isLoggedIn, router, user.links]);
+  }, [hasAccount, router, hasAccountData]);
 
   return (
     <main className="flex flex-col items-center h-full bg-center text-white">
+      {isLoading && <Spinner />}
       <img src="/logo.png" className="w-[15rem] mt-24" />
       <h1 className="font-bold text-7xl mb-8">Welcome to Beacon!</h1>
       <button
