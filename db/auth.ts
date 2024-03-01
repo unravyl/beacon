@@ -7,13 +7,7 @@ import {
 } from 'firebase/auth';
 import { UserInterface } from '@/interface/authInterface';
 import { Dispatch, SetStateAction } from 'react';
-import {
-  doesUserExist,
-  filterUserID,
-  getSingleUser,
-  postInitialUserData,
-  refreshUserData,
-} from './store';
+import { getSingleUser, postInitialUserData, refreshUserData } from './store';
 import { NodeInterface } from '@/interface/graphInterface';
 
 const provider = new GoogleAuthProvider();
