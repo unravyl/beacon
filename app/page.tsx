@@ -44,7 +44,7 @@ export default function Home() {
           onClick={handleLoginButtonClick}
         >
           Log In with Google{' '}
-          <img src="/generics/google-logo.svg" alt="google logo" />{' '}
+          <img src="/generics/google-logo.svg" alt="google logo" />
         </button>
       </div>
 
