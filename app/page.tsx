@@ -33,7 +33,8 @@ export default function Home() {
         <Image
           src="/generics/logo.png"
           alt="beacon logo"
-          className="w-[15rem]"
+          width={220}
+          height={220}
         />
         <h1 className="font-bold text-5xl text-center mb-8 sm:text-7xl">
           Welcome to Beacon!
@@ -43,7 +44,7 @@ export default function Home() {
           onClick={handleLoginButtonClick}
         >
           Log In with Google{' '}
-          <Image src="/generics/google-logo.svg" alt="google logo" />{' '}
+          <img src="/generics/google-logo.svg" alt="google logo" />{' '}
         </button>
       </div>
 

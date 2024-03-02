@@ -43,7 +43,8 @@ function Page() {
         <Image
           src="/generics/logo.png"
           alt="beacon logo"
-          className="w-[80px] h-[80px]"
+          width={80}
+          height={80}
         />
         <p className="text-white text-5xl font-semibold">Beacon</p>
       </div>
