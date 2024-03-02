@@ -1,6 +1,7 @@
 'use client';
 
 import Spinner from '@/components/generics/Spinner';
+import Image from 'next/image';
 import { useUserContext } from '@/context/UserContext';
 import { handleSignIn } from '@/db/auth';
 import { useRouter } from 'next/navigation';
@@ -29,17 +30,34 @@ export default function Home() {
   }, [hasAccount, router, hasAccountData]);
 
   return (
-    <main className="flex flex-col items-center h-full bg-center text-white">
+    <main className="flex items-center justify-center h-full text-white">
+      <div className="flex flex-col items-center justify-center h-full">
+        <Image
+          src="/generics/logo.png"
+          alt="beacon logo"
+          width={220}
+          height={220}
+        />
+        <h1 className="font-bold text-5xl text-center mb-8 sm:text-7xl">
+          Welcome to Beacon!
+        </h1>
+        <button
+          className="flex items-center border-2 py-3 px-4 gap-x-2 hover:bg-slate-700 rounded"
+          onClick={handleLoginButtonClick}
+        >
+          Log In with Google
+          <div className="h-7 aspect-square relative">
+            <Image
+              src="/generics/google-logo.svg"
+              alt="google logo"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </button>
+      </div>
+
       {isLoading && <Spinner />}
-      <img src="/logo.png" className="w-[15rem] mt-24" />
-      <h1 className="font-bold text-7xl mb-8">Welcome to Beacon!</h1>
-      <button
-        className="flex flex-row border-2 p-2 gap-x-2 hover:bg-slate-400"
-        onClick={handleLoginButtonClick}
-      >
-        Log In with Google{' '}
-        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" />{' '}
-      </button>
     </main>
   );
 }

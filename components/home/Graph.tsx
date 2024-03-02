@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 import JobTitleModal from './JobTitleModal';
-import Details from '@/components/home/Details';
+import JobDescriptionSidePanel from '@/components/home/JobDescriptionSidePanel';
 import SimpleSidePanel from '@/components/home/SimpleSidePanel';
 
 import { useUserContext } from '@/context/UserContext';
@@ -393,7 +393,7 @@ const Graph = ({ width = 600, height = 400 }) => {
         />
       )}
       {showSidePanelModal && (
-        <Details
+        <JobDescriptionSidePanel
           details={{ ...selectedNode.details, title: selectedNode.label }}
           close={() => setShowSidePanelModal(false)}
         />
@@ -403,3 +403,4 @@ const Graph = ({ width = 600, height = 400 }) => {
 };
 
 export default Graph;
+

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Graph from '@/components/home/Graph';
 import { refreshUserData } from '@/db/store';
 import { useUserContext } from '@/context/UserContext';
+import Image from 'next/image';
+
+import Graph from '@/components/home/Graph';
 
 function Page() {
   const { user, setUser } = useUserContext();
@@ -38,7 +40,12 @@ function Page() {
   return (
     <div className="canvas-container">
       <div className="absolute top-0 left-0 p-5 flex items-center">
-        <img src="/logo.png" alt="logo" className="w-[80px] h-[80px]" />
+        <Image
+          src="/generics/logo.png"
+          alt="beacon logo"
+          width={80}
+          height={80}
+        />
         <p className="text-white text-5xl font-semibold">Beacon</p>
       </div>
       <button className="absolute right-0 top-0 p-5">
@@ -50,3 +57,4 @@ function Page() {
 }
 
 export default Page;
+

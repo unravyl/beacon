@@ -31,7 +31,7 @@ export default function RootLayout({
       </head>
       <UserWrapper>
         <body
-          className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
+          className={`${inter.className} bg-[url('/generics/LandPageBG.svg')]`}
         >
           {children}
         </body>
@@ -39,3 +39,4 @@ export default function RootLayout({
     </html>
   );
 }
+
