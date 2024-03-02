@@ -71,12 +71,13 @@ export const refreshUserData = async (
   const userRef = doc(db, 'users', authID);
   const userSnap = await getDoc(userRef);
   const updatedUserData = userSnap.data();
-  console.log('LOGG', updatedUserData?.nodes);
   setUser({
     ...user,
     nodes: updatedUserData?.nodes,
     links: updatedUserData?.links,
+    nodeNumber: updatedUserData?.nodeNumber,
   });
+  console.log('LOG: Refresh User Data');
 };
 
 export const postInitialUserData = async (user: UserInterface) => {
@@ -99,6 +100,8 @@ export const postInitialUserData = async (user: UserInterface) => {
     name: user.name,
     email: user.email,
     nodes: user.nodes,
+    links: user.links,
+    nodeNumber: user.nodeNumber,
   });
 };
 
@@ -139,6 +142,7 @@ export const updateUserNodes = async (
   const updatedNodes = [...userNodes, ...newNodes];
   await updateDoc(userRef, {
     nodes: updatedNodes,
+    nodeNumber: updatedNodes.length + 1,
   });
   await refreshUserData(user, setUser);
 };
@@ -168,5 +172,24 @@ export const postInitialLinks = async (
   const userRef = doc(db, 'users', authID);
   await updateDoc(userRef, {
     links: links,
+  });
+};
+
+export const deleteLink = async (
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>,
+  link: any
+) => {
+  const authID = await filterUserID(user.email);
+  const userRef = doc(db, 'users', authID);
+  const userSnap = await getDoc(userRef);
+  const userLinks = userSnap.data()?.links;
+  const updatedLinks = userLinks.filter((userLink: LinkInterface) => {
+    return (
+      userLink.source != link.source.id && userLink.target != link.target.id
+    );
+  });
+  await updateDoc(userRef, {
+    links: updatedLinks,
   });
 };

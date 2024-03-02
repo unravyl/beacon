@@ -8,24 +8,16 @@ import {
 import { UserInterface } from '@/interface/authInterface';
 import { Dispatch, SetStateAction } from 'react';
 import { getSingleUser, postInitialUserData, refreshUserData } from './store';
-import { NodeInterface } from '@/interface/graphInterface';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
 
-interface UserDataInterface {
-  name: string;
-  email: string;
-  nodes: NodeInterface[];
-}
-
 export const handleSignIn = async (
-  currentUser: UserInterface,
   setUser: Dispatch<SetStateAction<UserInterface>>,
   setHasAccount: Dispatch<SetStateAction<boolean>>,
   setHasAccounData: Dispatch<SetStateAction<boolean>>
 ) => {
-  let userData = {} as UserDataInterface;
+  let userData = {} as UserInterface;
   await signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
@@ -33,6 +25,7 @@ export const handleSignIn = async (
         userData = {
           name: user.displayName,
           email: user.email,
+          nodeNumber: 2,
           nodes: [
             {
               id: 'Node 1',
@@ -43,6 +36,7 @@ export const handleSignIn = async (
               group: 1,
             },
           ],
+          links: [],
         };
       }
     })
