@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
+import { insertCareerNodes } from '@/utils/graphUtils';
 
 function Details() {
   const router = useRouter();
@@ -28,12 +29,15 @@ function Details() {
       { interest, history, strength, weakness, education }
     );
     //create career nodes
-    updateUserNodes(user, setUser, data.response);
-    let links: LinkInterface[] = [];
-    data.response.forEach((item: NodeInterface) => {
-      links.push({ source: 'Node 1', target: item.id });
-    });
-    postInitialLinks(user, links);
+    const rootNode: NodeInterface = {
+      id: 'Node 1',
+      label: 'You',
+      details: {
+        description: 'Root Node',
+      },
+      group: 1,
+    };
+    insertCareerNodes(user, setUser, data.careers, rootNode);
     router.push('/home');
   };
 

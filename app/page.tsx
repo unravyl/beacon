@@ -16,41 +16,8 @@ export default function Home() {
   const router = useRouter();
 
   const handleLoginButtonClick = async () => {
-    await handleSignIn(setUser, setHasAccount, setHasAccountData);
     setIsLoading(true);
-  };
-
-  const handleTestButton = async () => {
-    const career = 'Machine Learning Engineer';
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-upskilling/',
-      { career: career }
-    );
-    console.log('LOGGG', data);
-    const startingNodeIdNumber = 1;
-    const currentStepNode = {
-      id: 'Node 0',
-      label: career,
-      details: {
-        description: 'Cool sht',
-      },
-      group: 2,
-    };
-    const nextStepNode = {
-      id: 'Node 999',
-      label: 'Legal Documents',
-      details: {
-        description: 'Legal sht',
-      },
-      group: 4,
-    };
-    const graphElements = insertUpskillingNodes(
-      startingNodeIdNumber,
-      data,
-      currentStepNode,
-      nextStepNode
-    );
-    console.log('LOGGG', graphElements);
+    await handleSignIn(setUser, setHasAccount, setHasAccountData);
   };
 
   useEffect(() => {

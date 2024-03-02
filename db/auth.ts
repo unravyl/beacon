@@ -25,7 +25,7 @@ export const handleSignIn = async (
         userData = {
           name: user.displayName,
           email: user.email,
-          nodeNumber: 1,
+          nodeNumber: 2,
           nodes: [
             {
               id: 'Node 1',
@@ -36,6 +36,7 @@ export const handleSignIn = async (
               group: 1,
             },
           ],
+          links: [],
         };
       }
     })

@@ -8,11 +8,11 @@ import Details from '@/components/home/Details';
 import SimpleSidePanel from '@/components/home/SimpleSidePanel';
 
 import { useUserContext } from '@/context/UserContext';
-import axios from 'axios';
 import Spinner from '@/components/generics/Spinner';
-import { updateUserLinks, updateUserNodes } from '@/db/store';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
-import { insertStepNodes } from '@/utils/graphUtils';
+import { insertStepNodes, insertUpskillingNodes } from '@/utils/graphUtils';
+import axios from 'axios';
+import { deleteLink } from '@/db/store';
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
@@ -27,11 +27,23 @@ const Graph = ({ width = 600, height = 400 }) => {
     1: '#69b3a2',
     2: '#274069',
     3: '#32CD32',
+    3.1: '#5C8374',
+    3.2: '#2D9596',
+    3.3: '#176B87',
+    4: '#32CD32',
+    5: '#32CD32',
+    6: '#32CD32',
   };
   const nodeTextColors = {
     1: '#fff',
     2: '#fff',
     3: '#274069',
+    3.1: '#fff',
+    3.2: '#fff',
+    3.3: '#fff',
+    4: '#274069',
+    5: '#274069',
+    6: '#274069',
   };
 
   const showSummary = (node: NodeInterface) => {
@@ -43,50 +55,62 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(true);
     setShowJobTitleModal(false);
     insertStepNodes(user, setUser, node);
-    // const response = await axios.post(
-    //   'http://127.0.0.1:8000/api/generate-upskilling/',
-    //   { career: node.label }
-    // );
-    // const upskillingNodes = [
-    //   ...response.data.response,
-    //   {
-    //     id: 'Node 15',
-    //     label: 'Legal Documents',
-    //     details: { description: 'Legal Stuff' },
-    //     group: 3,
-    //   },
-    //   {
-    //     id: 'Node 16',
-    //     label: 'Resume & Cover Letter',
-    //     details: { description: 'Paper Stuff' },
-    //     group: 3,
-    //   },
-    //   {
-    //     id: 'Node 17',
-    //     label: 'Job Application',
-    //     details: { description: 'Where/How to apply' },
-    //     group: 3,
-    //   },
-    // ];
-    // updateUserNodes(user, setUser, upskillingNodes);
-    // const upskillingLinks = [
-    //   { source: node.id, target: upskillingNodes[0].id },
-    //   { source: node.id, target: upskillingNodes[1].id },
-    //   { source: upskillingNodes[0].id, target: upskillingNodes[2].id },
-    //   { source: upskillingNodes[0].id, target: upskillingNodes[3].id },
-    //   { source: upskillingNodes[1].id, target: upskillingNodes[4].id },
-    //   { source: upskillingNodes[1].id, target: upskillingNodes[5].id },
-    //   { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
-    //   { source: upskillingNodes[3].id, target: upskillingNodes[6].id },
-    //   { source: upskillingNodes[4].id, target: upskillingNodes[7].id },
-    //   { source: upskillingNodes[5].id, target: upskillingNodes[7].id },
-    //   { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
-    //   { source: upskillingNodes[6].id, target: upskillingNodes[8].id },
-    //   { source: upskillingNodes[7].id, target: upskillingNodes[8].id },
-    //   { source: upskillingNodes[8].id, target: upskillingNodes[9].id },
-    //   { source: upskillingNodes[9].id, target: upskillingNodes[10].id },
-    // ];
-    // updateUserLinks(user, setUser, upskillingLinks);
+    setIsLoading(false);
+  };
+
+  const expandUpskillingNode = async (node) => {
+    setIsLoading(true);
+    const userLinks = user.links;
+    const userNodes = user.nodes;
+    if (!userLinks?.length || !userNodes?.length) {
+      console.error(
+        'ERROR: Either node or link lists are empty when trying to expand upskilling node'
+      );
+      return;
+    }
+    const upskillingLink = userLinks.find((userLink) => {
+      return node.id == userLink.target.id;
+    });
+    if (!upskillingLink) {
+      console.error(
+        'ERROR: No upskilling links are found when trying to expand upskilling node'
+      );
+      return;
+    }
+    const careerNode = userNodes.find((userNode) => {
+      return upskillingLink?.source.id == userNode.id;
+    });
+    if (!careerNode) {
+      console.error(
+        'ERROR: No career nodes are found when trying to expand upskilling node'
+      );
+      return;
+    }
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-upskilling/',
+      { career: careerNode.label }
+    );
+    console.log('LOG: Axios Data', careerNode.label, data);
+    const nextStepLink = userLinks.find((userLink) => {
+      return node.id == userLink.source.id;
+    });
+    if (!nextStepLink) {
+      console.error(
+        'ERROR: No legal document links are found when trying to expand upskilling node'
+      );
+      return;
+    }
+    const nextStepNode = userNodes.find((userNode) => {
+      return nextStepLink?.target.id == userNode.id;
+    });
+    if (!nextStepNode) {
+      console.error(
+        'ERROR: No legal document nodes are found when trying to expand upskilling node'
+      );
+      return;
+    }
+    await deleteLink(user, setUser, nextStepLink);
+    insertUpskillingNodes(user, setUser, data, node, nextStepNode);
     setIsLoading(false);
   };
 
@@ -94,24 +118,32 @@ const Graph = ({ width = 600, height = 400 }) => {
   const [nodeList, setNodeList] = useState(user.nodes);
   const [linksList, setLinksList] = useState(user.links);
 
-  const handleNodeClick = (d) => {
-    if (d.group === 1) {
+  const handleNodeClick = (node: NodeInterface) => {
+    if (node.group === 1) {
+      // root node
       return;
-    } else if (d.group === 2) {
-      // job title
-      setSelectedNode(d);
+    } else if (node.group === 2) {
+      // career node
+      setSelectedNode(node);
       setShowJobTitleModal(true);
       setShowSidePanelModal(false);
       setShowSimpleSidePanel(false);
-    } else if (d.group === 3) {
-      setSelectedNode(d);
-      setShowSimpleSidePanel(true);
+    } else if (node.group === 3) {
+      // upskilling node
+      setSelectedNode(node);
+      expandUpskillingNode(node);
+      setShowSimpleSidePanel(false);
       setShowSidePanelModal(false);
       setShowJobTitleModal(false);
-    } else if (d.group === 4) {
-      // requirements
-      // show side panel
     }
+    `
+    3.1 - Skill Nodes 
+    3.2 - Skill Resource Nodes 
+    3.3 - Skill Assessment Nodes 
+    4 - Legal Docs Nodes 
+    5 - Resume and Cover Letter Nodes 
+    6 - Job Hunting Nodes
+    `;
   };
 
   useEffect(() => {

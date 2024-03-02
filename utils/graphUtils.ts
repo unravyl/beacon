@@ -13,52 +13,48 @@ export const insertStepNodes = (
   careerNode: NodeInterface
 ) => {
   let nodeIdNumber = user.nodeNumber;
-  const stepNodes: NodeInterface[] = [
+  let stepNodes: NodeInterface[] = [];
+  let stepLinks: LinkInterface[] = [];
+  const stepDetails = [
     {
-      id: 'Node ' + nodeIdNumber,
       label: 'Upskilling',
-      details: { description: 'Preparation of skills for your career' },
+      description: 'Preparation of skills for your career',
       group: 3,
     },
     {
-      id: 'Node ' + nodeIdNumber + 1,
       label: 'Legal Documents',
-      details: {
-        description:
-          'Preparation of legal required documents for you to be able to work',
-      },
-      group: 3,
+      description:
+        'Preparation of legal required documents for you to be able to work',
+      group: 4,
     },
     {
-      id: 'Node ' + nodeIdNumber + 2,
       label: 'Resume and Cover Letter',
-      details: {
-        description:
-          'Preparation of Resume and Cover Letter for you to submit with your job application',
-      },
-      group: 3,
+      description:
+        'Preparation of Resume and Cover Letter for you to submit with your job application',
+      group: 5,
     },
     {
-      id: 'Node ' + nodeIdNumber + 3,
       label: 'Job Hunting',
-      details: {
-        description: 'Guide on the job hunting process',
-      },
-      group: 3,
+      description: 'Guide on the job hunting process',
+      group: 6,
     },
   ];
 
-  // function to insert the new nodes
-  // function to update the global latest node number
-  updateUserNodes(user, setUser, stepNodes);
+  stepDetails.forEach((step) => {
+    const stepNode: NodeInterface = {
+      id: 'Node ' + nodeIdNumber,
+      label: step.label,
+      details: {
+        description: step.description,
+      },
+      group: step.group,
+    };
+    stepNodes.push(stepNode);
 
-  let stepLinks: LinkInterface[] = [];
-
-  stepNodes.forEach((stepNode: NodeInterface) => {
     let newLink = {} as LinkInterface;
     if (stepLinks.length) {
       newLink = {
-        source: (parseInt(stepNode.id) - 1).toString(),
+        source: 'Node ' + (nodeIdNumber - 1),
         target: stepNode.id,
       };
     } else {
@@ -68,20 +64,26 @@ export const insertStepNodes = (
       };
     }
     stepLinks.push(newLink);
+
+    nodeIdNumber += 1;
   });
+  // function to insert the new nodes
+  // function to update the global latest node number
+  updateUserNodes(user, setUser, stepNodes);
 
   // function to insert the new links
   updateUserLinks(user, setUser, stepLinks);
 };
 
 export const insertUpskillingNodes = (
-  startingNodeIdNumber: number,
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>,
   newUpskillingData: CareerUpskillingInterface,
   currentStepNode: NodeInterface,
   nextStepNode: NodeInterface
 ) => {
   // function to insert new nodes
-  let nodeIdNumber = startingNodeIdNumber;
+  let nodeIdNumber = user.nodeNumber;
   const skills = newUpskillingData.skills;
   let newNodes: NodeInterface[] = [];
   let newLinks: LinkInterface[] = [];
@@ -151,12 +153,9 @@ export const insertUpskillingNodes = (
     newLinks.push(finalLink);
   });
 
-  // function that inserts newNodes
-  // functon that inserts newLinks
-  return {
-    nodes: newNodes,
-    links: newLinks,
-  };
+  // functon that insertsn newLinks
+  updateUserNodes(user, setUser, newNodes);
+  updateUserLinks(user, setUser, newLinks);
 };
 
 export const insertCareerNodes = (
