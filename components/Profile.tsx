@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useUserContext } from '@/context/UserContext';
+import Image from 'next/image';
 
 interface FieldInterface {
   [key: string]: string;
@@ -44,8 +45,9 @@ function Details() {
   return (
     <div className="w-[42rem] mt-2 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
       <div className="text-2xl font-bold">PROFILE</div>
-      <img
+      <Image
         src="https://www.svgrepo.com/show/345418/account-circle.svg"
+        alt="profle picture"
         className="w-[10rem]"
       />
       <div className="text-base font-bold">{'Name'.toUpperCase()}</div>
@@ -74,10 +76,10 @@ function Details() {
                     {fieldValues[input]}
                   </div>
                   <button onClick={() => handleEditClick(input)}>
-                    <img
+                    <Image
                       src="https://img.icons8.com/?size=24&id=86372&format=png"
-                      className="w-[20px] h-[20px]"
                       alt="Edit"
+                      className="w-[20px] h-[20px]"
                     />
                   </button>
                 </>
@@ -92,3 +94,4 @@ function Details() {
 }
 
 export default Details;
+
