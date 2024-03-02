@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useUserContext } from '@/context/UserContext';
+import Image from 'next/image';
 
 interface FieldInterface {
   [key: string]: string;
@@ -44,11 +45,14 @@ function Details() {
   return (
     <div className="w-[42rem] mt-2 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
       <div className="text-2xl font-bold">PROFILE</div>
-      <img
-        src="https://www.svgrepo.com/show/345418/account-circle.svg"
-        alt="profle picture"
-        className="w-[10rem]"
-      />
+      <div className="h-[10rem] aspect-square relative">
+        <Image
+          src="https://www.svgrepo.com/show/345418/account-circle.svg"
+          alt="profle picture"
+          className="object-cover"
+          fill
+        />
+      </div>
       <div className="text-base font-bold">{'Name'.toUpperCase()}</div>
       <div className="text-xs mt-[-6px]">Email</div>
 
@@ -74,11 +78,15 @@ function Details() {
                   <div className="justify-start overflow-x-auto  w-[17rem]">
                     {fieldValues[input]}
                   </div>
-                  <button onClick={() => handleEditClick(input)}>
-                    <img
+                  <button
+                    onClick={() => handleEditClick(input)}
+                    className="relative w-[20px] h-[20px]"
+                  >
+                    <Image
                       src="https://img.icons8.com/?size=24&id=86372&format=png"
                       alt="Edit"
-                      className="w-[20px] h-[20px]"
+                      className="object-cover"
+                      fill
                     />
                   </button>
                 </>
@@ -93,4 +101,3 @@ function Details() {
 }
 
 export default Details;
-

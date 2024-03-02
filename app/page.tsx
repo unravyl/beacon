@@ -42,11 +42,18 @@ export default function Home() {
           Welcome to Beacon!
         </h1>
         <button
-          className="flex border-2 py-3 px-4 gap-x-2 hover:bg-slate-700 rounded"
+          className="flex items-center border-2 py-3 px-4 gap-x-2 hover:bg-slate-700 rounded"
           onClick={handleLoginButtonClick}
         >
-          Log In with Google{' '}
-          <img src="/generics/google-logo.svg" alt="google logo" />
+          Log In with Google
+          <div className="h-7 aspect-square relative">
+            <Image
+              src="/generics/google-logo.svg"
+              alt="google logo"
+              fill
+              className="object-cover"
+            />
+          </div>
         </button>
       </div>
 
@@ -54,4 +61,3 @@ export default function Home() {
     </main>
   );
 }
-
