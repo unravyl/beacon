@@ -118,7 +118,7 @@ const Graph = ({ width = 600, height = 400 }) => {
   const [nodeList, setNodeList] = useState(user.nodes);
   const [linksList, setLinksList] = useState(user.links);
 
-  const handleNodeClick = (node: NodeInterface) => {
+  const handleNodeClick = (node) => {
     if (node.group === 1) {
       // root node
       return;
@@ -129,20 +129,54 @@ const Graph = ({ width = 600, height = 400 }) => {
       setShowSidePanelModal(false);
       setShowSimpleSidePanel(false);
     } else if (node.group === 3) {
+      const currentLinks = user.links;
+      const currentNodes = user.nodes;
+      const upskillingLink = currentLinks?.find((currentLink) => {
+        return node.id == currentLink.source.id;
+      });
+      if (!upskillingLink) {
+        console.error('Error: No links after upskilling node found');
+        return;
+      }
+      const nextStepNode = currentNodes?.find((currentNode) => {
+        return upskillingLink.target.id == currentNode.id;
+      });
+      if (!nextStepNode) {
+        console.error('Error: No nodes after upskilling link found');
+        return;
+      }
+      if (nextStepNode.group != 4 && nextStepNode.group == 3.1) {
+        console.log('LOG: Cannot expand upskilling node anymore');
+        return;
+      }
+
       // upskilling node
       setSelectedNode(node);
       expandUpskillingNode(node);
       setShowSimpleSidePanel(false);
       setShowSidePanelModal(false);
       setShowJobTitleModal(false);
+    } else if (node.group === 4) {
+      return;
+    } else if (node.group === 5) {
+      return;
+    } else if (node.group === 6) {
+      return;
+    } else {
+      setSelectedNode(node);
+      setShowSidePanelModal(false);
+      setShowSimpleSidePanel(true);
     }
     `
+    1 - Root Node
+    2 - Career Nodes
+    3 - Upskilling Node
     3.1 - Skill Nodes 
     3.2 - Skill Resource Nodes 
     3.3 - Skill Assessment Nodes 
-    4 - Legal Docs Nodes 
-    5 - Resume and Cover Letter Nodes 
-    6 - Job Hunting Nodes
+    4 - Legal Docs Node 
+    5 - Resume and Cover Letter Node 
+    6 - Job Hunting Node
     `;
   };
 

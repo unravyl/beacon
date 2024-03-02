@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { UserWrapper } from '@/context/UserContext';
-import { NodeNumberWrapper } from '@/context/NodeNumberContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,13 +30,11 @@ export default function RootLayout({
         ></link>
       </head>
       <UserWrapper>
-        <NodeNumberWrapper>
-          <body
-            className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
-          >
-            {children}
-          </body>
-        </NodeNumberWrapper>
+        <body
+          className={`${inter.className} bg-[url('../assets/icons/LandPageBG.svg')]`}
+        >
+          {children}
+        </body>
       </UserWrapper>
     </html>
   );

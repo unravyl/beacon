@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Input from '@/components/generics/Input';
 import { useUserContext } from '@/context/UserContext';
-import { postInitialLinks, postUserInfo, updateUserNodes } from '@/db/store';
+import { postUserInfo } from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
@@ -28,7 +28,6 @@ function Details() {
       'http://127.0.0.1:8000/api/generate-top-careers/',
       { interest, history, strength, weakness, education }
     );
-    //create career nodes
     const rootNode: NodeInterface = {
       id: 'Node 1',
       label: 'You',
@@ -37,22 +36,17 @@ function Details() {
       },
       group: 1,
     };
+    //create career nodes
     insertCareerNodes(user, setUser, data.careers, rootNode);
     router.push('/home');
   };
 
   useEffect(() => {
-    console.log('LOGGG profile data', user);
-    if (
-      user.education ||
-      user.interest ||
-      user.history ||
-      user.strength ||
-      user.weakness
-    ) {
+    console.log('LOG: User Profile', user.links);
+    if (user.links?.length || !user.email) {
       setCanSubmitUserData(true);
     }
-  }, [user]);
+  }, []);
 
   return (
     <div className="w-[24rem] mt-4 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
