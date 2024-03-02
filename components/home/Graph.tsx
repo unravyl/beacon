@@ -324,16 +324,6 @@ const Graph = ({ width = 600, height = 400 }) => {
           close={() => setShowSimpleSidePanel(false)}
         />
       )}
-      <JobDescriptionSidePanel
-        details={{
-          title: 'aksldjf',
-          salary: '$123',
-          description:
-            'asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf',
-          companies: ['askldf', 'aklsfdj'],
-          qualifications: ['askldf', 'asdkljf'],
-        }}
-      />
       {showSidePanelModal && (
         <JobDescriptionSidePanel
           details={{ ...selectedNode.details, title: selectedNode.label }}
