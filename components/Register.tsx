@@ -18,7 +18,7 @@ function Details() {
   const [weakness, setWeakness] = useState(['']);
   const [education, setEducation] = useState(['']);
   const [isLoading, setIsLoading] = useState(false);
-  const [canSubmitUserData, setCanSubmitUserData] = useState(true);
+  const [canSubmitUserData, setCanSubmitUserData] = useState(false);
 
   const submit = async () => {
     setIsLoading(true);
@@ -27,6 +27,7 @@ function Details() {
       'http://127.0.0.1:8000/api/generate-top-careers/',
       { interest, history, strength, weakness, education }
     );
+    //create career nodes
     updateUserNodes(user, setUser, data.response);
     let links: LinkInterface[] = [];
     data.response.forEach((item: NodeInterface) => {
@@ -37,14 +38,15 @@ function Details() {
   };
 
   useEffect(() => {
+    console.log('LOGGG profile data', user);
     if (
-      user.education?.length ||
-      user.interest?.length ||
-      user.history?.length ||
-      user.strength?.length ||
-      user.weakness?.length
+      user.education ||
+      user.interest ||
+      user.history ||
+      user.strength ||
+      user.weakness
     ) {
-      setCanSubmitUserData(false);
+      setCanSubmitUserData(true);
     }
   }, [user]);
 

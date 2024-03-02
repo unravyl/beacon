@@ -1,12 +1,18 @@
-import { CareerDataInterface } from '@/interface/careerInterface';
+import { updateUserLinks, updateUserNodes } from '@/db/store';
+import { UserInterface } from '@/interface/authInterface';
+import {
+  CareerUpskillingInterface,
+  CareerDetailsInterface,
+} from '@/interface/careerInterface';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
-import { link } from 'fs';
+import { Dispatch, SetStateAction } from 'react';
 
-const insertStepNodes = (
-  careerNode: NodeInterface,
-  startingNodeIdNumber: number
+export const insertStepNodes = (
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>,
+  careerNode: NodeInterface
 ) => {
-  let nodeIdNumber = startingNodeIdNumber;
+  let nodeIdNumber = user.nodeNumber;
   const stepNodes: NodeInterface[] = [
     {
       id: 'Node ' + nodeIdNumber,
@@ -43,10 +49,10 @@ const insertStepNodes = (
   ];
 
   // function to insert the new nodes
-  nodeIdNumber += 4;
   // function to update the global latest node number
+  updateUserNodes(user, setUser, stepNodes);
 
-  let stepLinks = [];
+  let stepLinks: LinkInterface[] = [];
 
   stepNodes.forEach((stepNode: NodeInterface) => {
     let newLink = {} as LinkInterface;
@@ -65,11 +71,12 @@ const insertStepNodes = (
   });
 
   // function to insert the new links
+  updateUserLinks(user, setUser, stepLinks);
 };
 
-const insertUpskillingNodes = (
+export const insertUpskillingNodes = (
   startingNodeIdNumber: number,
-  newUpskillingData: CareerDataInterface,
+  newUpskillingData: CareerUpskillingInterface,
   currentStepNode: NodeInterface,
   nextStepNode: NodeInterface
 ) => {
@@ -143,4 +150,48 @@ const insertUpskillingNodes = (
     };
     newLinks.push(finalLink);
   });
+
+  // function that inserts newNodes
+  // functon that inserts newLinks
+  return {
+    nodes: newNodes,
+    links: newLinks,
+  };
+};
+
+export const insertCareerNodes = (
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>,
+  careerData: CareerDetailsInterface[],
+  previousNode: NodeInterface
+) => {
+  let careerNodes: NodeInterface[] = [];
+  let careerLinks: LinkInterface[] = [];
+  let nodeIdNumber = user.nodeNumber;
+
+  careerData.forEach((career) => {
+    const careerNode: NodeInterface = {
+      id: 'Node ' + nodeIdNumber,
+      label: career.name,
+      details: {
+        description: career.description,
+        salary: career.salary,
+        companies: career.companies,
+        qualifications: career.qualifications,
+      },
+      group: 2,
+    };
+    careerNodes.push(careerNode);
+    nodeIdNumber += 1;
+
+    const careerLink: LinkInterface = {
+      source: previousNode.id,
+      target: careerNode.id,
+    };
+    careerLinks.push(careerLink);
+  });
+
+  // update context and firestore
+  updateUserNodes(user, setUser, careerNodes);
+  updateUserLinks(user, setUser, careerLinks);
 };

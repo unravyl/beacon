@@ -27,7 +27,14 @@ interface CareerSkillInterface {
   resources: CareerSkillResourceInterface[];
 }
 
-export interface CareerDataInterface {
-  name: string;
+export interface CareerUpskillingInterface {
   skills: CareerSkillInterface[];
+}
+
+export interface CareerDetailsInterface {
+  name: string;
+  description: string;
+  salary: string;
+  companies: string[];
+  qualifications: string[];
 }

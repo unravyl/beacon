@@ -12,6 +12,7 @@ import axios from 'axios';
 import Spinner from '@/components/generics/Spinner';
 import { updateUserLinks, updateUserNodes } from '@/db/store';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
+import { insertStepNodes } from '@/utils/graphUtils';
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
@@ -38,53 +39,54 @@ const Graph = ({ width = 600, height = 400 }) => {
     setShowJobTitleModal(false);
   };
 
-  const expandNode = async (node: NodeInterface) => {
+  const expandCareerNode = async (node: NodeInterface) => {
     setIsLoading(true);
     setShowJobTitleModal(false);
-    const response = await axios.post(
-      'http://127.0.0.1:8000/api/generate-upskilling/',
-      { career: node.label }
-    );
-    const upskillingNodes = [
-      ...response.data.response,
-      {
-        id: 'Node 15',
-        label: 'Legal Documents',
-        details: { description: 'Legal Stuff' },
-        group: 3,
-      },
-      {
-        id: 'Node 16',
-        label: 'Resume & Cover Letter',
-        details: { description: 'Paper Stuff' },
-        group: 3,
-      },
-      {
-        id: 'Node 17',
-        label: 'Job Application',
-        details: { description: 'Where/How to apply' },
-        group: 3,
-      },
-    ];
-    updateUserNodes(user, setUser, upskillingNodes);
-    const upskillingLinks = [
-      { source: node.id, target: upskillingNodes[0].id },
-      { source: node.id, target: upskillingNodes[1].id },
-      { source: upskillingNodes[0].id, target: upskillingNodes[2].id },
-      { source: upskillingNodes[0].id, target: upskillingNodes[3].id },
-      { source: upskillingNodes[1].id, target: upskillingNodes[4].id },
-      { source: upskillingNodes[1].id, target: upskillingNodes[5].id },
-      { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
-      { source: upskillingNodes[3].id, target: upskillingNodes[6].id },
-      { source: upskillingNodes[4].id, target: upskillingNodes[7].id },
-      { source: upskillingNodes[5].id, target: upskillingNodes[7].id },
-      { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
-      { source: upskillingNodes[6].id, target: upskillingNodes[8].id },
-      { source: upskillingNodes[7].id, target: upskillingNodes[8].id },
-      { source: upskillingNodes[8].id, target: upskillingNodes[9].id },
-      { source: upskillingNodes[9].id, target: upskillingNodes[10].id },
-    ];
-    updateUserLinks(user, setUser, upskillingLinks);
+    insertStepNodes(user, setUser, node);
+    // const response = await axios.post(
+    //   'http://127.0.0.1:8000/api/generate-upskilling/',
+    //   { career: node.label }
+    // );
+    // const upskillingNodes = [
+    //   ...response.data.response,
+    //   {
+    //     id: 'Node 15',
+    //     label: 'Legal Documents',
+    //     details: { description: 'Legal Stuff' },
+    //     group: 3,
+    //   },
+    //   {
+    //     id: 'Node 16',
+    //     label: 'Resume & Cover Letter',
+    //     details: { description: 'Paper Stuff' },
+    //     group: 3,
+    //   },
+    //   {
+    //     id: 'Node 17',
+    //     label: 'Job Application',
+    //     details: { description: 'Where/How to apply' },
+    //     group: 3,
+    //   },
+    // ];
+    // updateUserNodes(user, setUser, upskillingNodes);
+    // const upskillingLinks = [
+    //   { source: node.id, target: upskillingNodes[0].id },
+    //   { source: node.id, target: upskillingNodes[1].id },
+    //   { source: upskillingNodes[0].id, target: upskillingNodes[2].id },
+    //   { source: upskillingNodes[0].id, target: upskillingNodes[3].id },
+    //   { source: upskillingNodes[1].id, target: upskillingNodes[4].id },
+    //   { source: upskillingNodes[1].id, target: upskillingNodes[5].id },
+    //   { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
+    //   { source: upskillingNodes[3].id, target: upskillingNodes[6].id },
+    //   { source: upskillingNodes[4].id, target: upskillingNodes[7].id },
+    //   { source: upskillingNodes[5].id, target: upskillingNodes[7].id },
+    //   { source: upskillingNodes[2].id, target: upskillingNodes[6].id },
+    //   { source: upskillingNodes[6].id, target: upskillingNodes[8].id },
+    //   { source: upskillingNodes[7].id, target: upskillingNodes[8].id },
+    //   { source: upskillingNodes[8].id, target: upskillingNodes[9].id },
+    //   { source: upskillingNodes[9].id, target: upskillingNodes[10].id },
+    // ];
+    // updateUserLinks(user, setUser, upskillingLinks);
     setIsLoading(false);
   };
 
@@ -311,7 +313,7 @@ const Graph = ({ width = 600, height = 400 }) => {
             showSummary(selectedNode);
           }}
           expand={() => {
-            expandNode(selectedNode);
+            expandCareerNode(selectedNode);
           }}
         />
       )}

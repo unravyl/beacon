@@ -76,6 +76,7 @@ export const refreshUserData = async (
     ...user,
     nodes: updatedUserData?.nodes,
     links: updatedUserData?.links,
+    nodeNumber: updatedUserData?.nodeNumber,
   });
 };
 
@@ -99,6 +100,7 @@ export const postInitialUserData = async (user: UserInterface) => {
     name: user.name,
     email: user.email,
     nodes: user.nodes,
+    nodeNumber: user.nodeNumber,
   });
 };
 
@@ -139,6 +141,7 @@ export const updateUserNodes = async (
   const updatedNodes = [...userNodes, ...newNodes];
   await updateDoc(userRef, {
     nodes: updatedNodes,
+    nodeNumber: updatedNodes.length + 1,
   });
   await refreshUserData(user, setUser);
 };

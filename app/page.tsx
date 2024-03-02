@@ -5,6 +5,8 @@ import { useUserContext } from '@/context/UserContext';
 import { handleSignIn } from '@/db/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { insertUpskillingNodes } from '@/utils/graphUtils';
+import axios from 'axios';
 
 export default function Home() {
   const { user, setUser } = useUserContext();
@@ -14,8 +16,41 @@ export default function Home() {
   const router = useRouter();
 
   const handleLoginButtonClick = async () => {
-    await handleSignIn(user, setUser, setHasAccount, setHasAccountData);
+    await handleSignIn(setUser, setHasAccount, setHasAccountData);
     setIsLoading(true);
+  };
+
+  const handleTestButton = async () => {
+    const career = 'Machine Learning Engineer';
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-upskilling/',
+      { career: career }
+    );
+    console.log('LOGGG', data);
+    const startingNodeIdNumber = 1;
+    const currentStepNode = {
+      id: 'Node 0',
+      label: career,
+      details: {
+        description: 'Cool sht',
+      },
+      group: 2,
+    };
+    const nextStepNode = {
+      id: 'Node 999',
+      label: 'Legal Documents',
+      details: {
+        description: 'Legal sht',
+      },
+      group: 4,
+    };
+    const graphElements = insertUpskillingNodes(
+      startingNodeIdNumber,
+      data,
+      currentStepNode,
+      nextStepNode
+    );
+    console.log('LOGGG', graphElements);
   };
 
   useEffect(() => {
