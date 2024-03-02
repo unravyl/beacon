@@ -38,7 +38,11 @@ function Page() {
   return (
     <div className="canvas-container">
       <div className="absolute top-0 left-0 p-5 flex items-center">
-        <img src="/logo.png" alt="logo" className="w-[80px] h-[80px]" />
+        <img
+          src="/generics/logo.png"
+          alt="logo"
+          className="w-[80px] h-[80px]"
+        />
         <p className="text-white text-5xl font-semibold">Beacon</p>
       </div>
       <button className="absolute right-0 top-0 p-5">
@@ -50,3 +54,4 @@ function Page() {
 }
 
 export default Page;
+

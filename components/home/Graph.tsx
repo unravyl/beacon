@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 import JobTitleModal from './JobTitleModal';
-import Details from '@/components/home/Details';
+import JobDescriptionSidePanel from '@/components/home/JobDescriptionSidePanel';
 import SimpleSidePanel from '@/components/home/SimpleSidePanel';
 
 import { useUserContext } from '@/context/UserContext';
@@ -324,8 +324,18 @@ const Graph = ({ width = 600, height = 400 }) => {
           close={() => setShowSimpleSidePanel(false)}
         />
       )}
+      <JobDescriptionSidePanel
+        details={{
+          title: 'aksldjf',
+          salary: '$123',
+          description:
+            'asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf asdklfj lorem ipsum kldsjfalksdj fkljsdafklj dklsfj kldjf lskdjf kdlsjf lksdj fkljd klfjk ldjfsdkl jfkl jdkl fj kljsdfkl jdfkl jk jfdslkj fklj fkljds klfjk jfk djsfkl jsdkljf klsdjf klsjdfkl jdsklfj kldsj klsdjfk jdskl jsdkl fjsdkl jfdkslj skdlj fdklsjf klds jf',
+          companies: ['askldf', 'aklsfdj'],
+          qualifications: ['askldf', 'asdkljf'],
+        }}
+      />
       {showSidePanelModal && (
-        <Details
+        <JobDescriptionSidePanel
           details={{ ...selectedNode.details, title: selectedNode.label }}
           close={() => setShowSidePanelModal(false)}
         />
@@ -335,3 +345,4 @@ const Graph = ({ width = 600, height = 400 }) => {
 };
 
 export default Graph;
+
