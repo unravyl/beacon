@@ -3,6 +3,7 @@ export interface NodeInterface {
   label: string;
   details: {
     description: string;
+    link?: string;
     salary?: string;
     companies?: string[];
     qualifications?: string[];

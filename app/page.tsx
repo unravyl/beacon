@@ -5,6 +5,8 @@ import { useUserContext } from '@/context/UserContext';
 import { handleSignIn } from '@/db/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { insertUpskillingNodes } from '@/utils/graphUtils';
+import axios from 'axios';
 
 export default function Home() {
   const { user, setUser } = useUserContext();
@@ -14,8 +16,8 @@ export default function Home() {
   const router = useRouter();
 
   const handleLoginButtonClick = async () => {
-    await handleSignIn(user, setUser, setHasAccount, setHasAccountData);
     setIsLoading(true);
+    await handleSignIn(setUser, setHasAccount, setHasAccountData);
   };
 
   useEffect(() => {

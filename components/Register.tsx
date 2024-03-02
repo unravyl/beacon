@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import Input from '@/components/generics/Input';
 import { useUserContext } from '@/context/UserContext';
-import { postInitialLinks, postUserInfo, updateUserNodes } from '@/db/store';
+import { postUserInfo } from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
+import { insertCareerNodes } from '@/utils/graphUtils';
 
 function Details() {
   const router = useRouter();
@@ -18,7 +19,7 @@ function Details() {
   const [weakness, setWeakness] = useState(['']);
   const [education, setEducation] = useState(['']);
   const [isLoading, setIsLoading] = useState(false);
-  const [canSubmitUserData, setCanSubmitUserData] = useState(true);
+  const [canSubmitUserData, setCanSubmitUserData] = useState(false);
 
   const submit = async () => {
     setIsLoading(true);
@@ -27,26 +28,25 @@ function Details() {
       'http://127.0.0.1:8000/api/generate-top-careers/',
       { interest, history, strength, weakness, education }
     );
-    updateUserNodes(user, setUser, data.response);
-    let links: LinkInterface[] = [];
-    data.response.forEach((item: NodeInterface) => {
-      links.push({ source: 'Node 1', target: item.id });
-    });
-    postInitialLinks(user, links);
+    const rootNode: NodeInterface = {
+      id: 'Node 1',
+      label: 'You',
+      details: {
+        description: 'Root Node',
+      },
+      group: 1,
+    };
+    //create career nodes
+    insertCareerNodes(user, setUser, data.careers, rootNode);
     router.push('/home');
   };
 
   useEffect(() => {
-    if (
-      user.education?.length ||
-      user.interest?.length ||
-      user.history?.length ||
-      user.strength?.length ||
-      user.weakness?.length
-    ) {
-      setCanSubmitUserData(false);
+    console.log('LOG: User Profile', user.links);
+    if (user.links?.length || !user.email) {
+      setCanSubmitUserData(true);
     }
-  }, [user]);
+  }, []);
 
   return (
     <div className="w-[24rem] mt-4 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
