@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { refreshUserData } from '@/db/store';
+import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/context/UserContext';
 import Image from 'next/image';
 
 import Graph from '@/components/home/Graph';
 
 function Page() {
+  const router = useRouter();
   const { user, setUser } = useUserContext();
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -23,6 +25,10 @@ function Page() {
       handleUserRefresh();
     }
   }, []);
+  const changePath = ()=> {
+    console.log("User", user)
+    router.push('/profile')
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,7 +55,7 @@ function Page() {
         <p className="text-white text-5xl font-semibold">Beacon</p>
       </div>
       <button className="absolute right-0 top-0 p-5">
-        <i className="bx bx-face text-white text-5xl"></i>
+        <i onClick={changePath} className="bx bx-face text-white text-5xl"></i>
       </button>
       <Graph width={windowSize.width} height={windowSize.height} />
     </div>
