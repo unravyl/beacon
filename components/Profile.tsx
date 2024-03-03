@@ -7,7 +7,6 @@ import Spinner from '@/components/generics/Spinner';
 import { useRouter } from 'next/navigation';
 import { ProfileInterface } from '@/interface/authInterface';
 
-
 interface FieldInterface {
   [key: string]: string;
 }
@@ -24,28 +23,21 @@ const inputFields = [
   'Educational Background',
 ];
 
-const userFields = [
-  'interest',
-  'history',
-  'strength',
-  'weakness',
-  'education',
-]
+const userFields = ['interest', 'history', 'strength', 'weakness', 'education'];
 
 function Details() {
   const router = useRouter();
   const { user, setUser } = useUserContext();
   const [editMode, setEditMode] = useState({} as EditModeInterface);
   const [fieldValues, setFieldValues] = useState({} as ProfileInterface);
-  const [submit, toSubmit] = useState(false)
+  const [submit, toSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEditClick = (field: string) => {
     setEditMode((prevEditMode) => ({ ...prevEditMode, [field]: true }));
-    toSubmit(true)
+    toSubmit(true);
   };
 
-  
   const handleInputChange = (field: string, value: string | string[]) => {
     setFieldValues((prevFieldValues) => ({
       ...prevFieldValues,
@@ -54,7 +46,7 @@ function Details() {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const updatedProfile: ProfileInterface = {
       interest: fieldValues.interest || [],
       history: fieldValues.history || [],
@@ -63,10 +55,8 @@ function Details() {
       education: fieldValues.education || [],
     };
 
-
     await updateUserProfile(user, setUser, updatedProfile);
-    await refreshUserData(user, setUser);
-    setIsLoading(false)
+    setIsLoading(false);
 
     // Reset edit mode and field values
 
@@ -104,34 +94,39 @@ function Details() {
               <h1>{input.toUpperCase()}</h1>
             </div>
             <div className="flex justify-between p-2">
-                  <input
-                    type="text"
-                    value={fieldValues[userFields[index]] || 's'}
-                    onChange={(e) => handleInputChange(userFields[index], e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1"
-                    disabled={!editMode[input]}
-                  />
-                  <button
-                    onClick={() => handleEditClick(input)}
-                    className="relative w-[20px] h-[20px]"
-                  >
-                    <Image
-                      src="https://img.icons8.com/?size=24&id=86372&format=png"
-                      alt="Edit"
-                      className="object-cover"
-                      fill
-                    />
-                  </button>
+              <input
+                type="text"
+                value={fieldValues[userFields[index]] || 's'}
+                onChange={(e) =>
+                  handleInputChange(userFields[index], e.target.value)
+                }
+                className="border border-gray-300 rounded px-2 py-1"
+                disabled={!editMode[input]}
+              />
+              <button
+                onClick={() => handleEditClick(input)}
+                className="relative w-[20px] h-[20px]"
+              >
+                <Image
+                  src="https://img.icons8.com/?size=24&id=86372&format=png"
+                  alt="Edit"
+                  className="object-cover"
+                  fill
+                />
+              </button>
             </div>
             <hr className="mb-2"></hr>
           </div>
         ))}
-        <div className='mt-6 flex items-center justify-center w-full'>
-        {submit && (
-          <button onClick={handleSubmit} className=' bg-gray-800 text-lg font-semibold text-white px-4 py-2 '>
-            Submit
-          </button>
-        )}
+        <div className="mt-6 flex items-center justify-center w-full">
+          {submit && (
+            <button
+              onClick={handleSubmit}
+              className=" bg-gray-800 text-lg font-semibold text-white px-4 py-2 "
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -139,5 +134,3 @@ function Details() {
 }
 
 export default Details;
-
-

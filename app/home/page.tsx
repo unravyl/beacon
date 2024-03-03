@@ -16,17 +16,7 @@ function Page() {
     height: window.innerHeight,
   });
 
-  const handleUserRefresh = async () => {
-    await refreshUserData(user, setUser);
-  };
-
-  useEffect(() => {
-    if (user.links?.length) {
-      handleUserRefresh();
-    }
-  }, []);
-  const changePath = () => {
-    console.log('User', user);
+  const handleRedirectToProfilePage = () => {
     router.push('/profile');
   };
 
@@ -55,7 +45,10 @@ function Page() {
         <p className="text-white text-5xl font-semibold">Beacon</p>
       </div>
       <button className="absolute right-0 top-0 p-5">
-        <i onClick={changePath} className="bx bx-face text-white text-5xl"></i>
+        <i
+          onClick={handleRedirectToProfilePage}
+          className="bx bx-face text-white text-5xl"
+        ></i>
       </button>
       <Graph width={windowSize.width} height={windowSize.height} />
     </div>
