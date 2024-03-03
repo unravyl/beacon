@@ -6,11 +6,9 @@ import { useUserContext } from '@/context/UserContext';
 import { handleSignIn } from '@/db/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { insertUpskillingNodes } from '@/utils/graphUtils';
-import axios from 'axios';
 
 export default function Home() {
-  const { user, setUser } = useUserContext();
+  const { setUser } = useUserContext();
   const [hasAccount, setHasAccount] = useState(false);
   const [hasAccountData, setHasAccountData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

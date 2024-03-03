@@ -10,9 +10,14 @@ import SimpleSidePanel from '@/components/home/SimpleSidePanel';
 import { useUserContext } from '@/context/UserContext';
 import Spinner from '@/components/generics/Spinner';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
-import { insertStepNodes, insertUpskillingNodes } from '@/utils/graphUtils';
+import {
+  insertStepNodes,
+  insertUpskillingNodes,
+  insertCareerNodes,
+} from '@/utils/graphUtils';
 import axios from 'axios';
 import { deleteLink } from '@/db/store';
+import { cleanUserProfile } from '@/utils/userUtils';
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
@@ -55,6 +60,35 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(true);
     setShowJobTitleModal(false);
     insertStepNodes(user, setUser, node);
+    setIsLoading(false);
+  };
+
+  const exploreRelatedCareers = async (node) => {
+    setIsLoading(true);
+    setShowJobTitleModal(false);
+    const careerNodes = user.nodes.filter((node) => {
+      return node.group === 2;
+    });
+    const careerNames = careerNodes.map((node) => {
+      return node.label;
+    });
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-related-careers/',
+      {
+        profile: user.profile,
+        career: node.label,
+        existingCareers: careerNames,
+      }
+    );
+
+    const baseNode = {
+      id: node.id,
+      label: node.label,
+      details: node.details,
+      group: node.group,
+    };
+
+    insertCareerNodes(user, setUser, data.careers, baseNode);
     setIsLoading(false);
   };
 
@@ -370,17 +404,10 @@ const Graph = ({ width = 600, height = 400 }) => {
       {showJobTitleModal && (
         <JobTitleModal
           title={selectedNode.label}
-          width="300px"
-          height="150px"
-          close={() => {
-            setShowJobTitleModal(false);
-          }}
-          summary={() => {
-            showSummary(selectedNode);
-          }}
-          expand={() => {
-            expandCareerNode(selectedNode);
-          }}
+          close={() => setShowJobTitleModal(false)}
+          summary={() => showSummary(selectedNode)}
+          expand={() => expandCareerNode(selectedNode)}
+          explore={() => exploreRelatedCareers(selectedNode)}
         />
       )}
       {showSimpleSidePanel && (
@@ -388,6 +415,7 @@ const Graph = ({ width = 600, height = 400 }) => {
           details={{
             title: selectedNode.label,
             description: selectedNode.details.description,
+            link: selectedNode.details.link,
           }}
           close={() => setShowSimpleSidePanel(false)}
         />
@@ -403,4 +431,3 @@ const Graph = ({ width = 600, height = 400 }) => {
 };
 
 export default Graph;
-

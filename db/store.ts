@@ -10,8 +10,7 @@ import {
   where,
 } from 'firebase/firestore';
 import app from '@/db/firebase';
-import { UserInterface } from '@/interface/authInterface';
-import { CareerInterface } from '@/interface/careerInterface';
+import { ProfileInterface, UserInterface } from '@/interface/authInterface';
 import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -54,15 +53,6 @@ export const getSingleUser = async (authEmail: string) => {
   return user;
 };
 
-export const doesUserExist = async (authEmail: string) => {
-  const doesAccountExist = await filterUserID(authEmail);
-  if (doesAccountExist == '') {
-    return false;
-  } else {
-    return true;
-  }
-};
-
 export const refreshUserData = async (
   user: UserInterface,
   setUser: Dispatch<SetStateAction<UserInterface>>
@@ -73,11 +63,12 @@ export const refreshUserData = async (
   const updatedUserData = userSnap.data();
   setUser({
     ...user,
+    profile: updatedUserData?.profile,
     nodes: updatedUserData?.nodes,
     links: updatedUserData?.links,
     nodeNumber: updatedUserData?.nodeNumber,
   });
-  console.log('LOG: Refresh User Data');
+  console.log('LOG: Refresh User Data', user);
 };
 
 export const postInitialUserData = async (user: UserInterface) => {
@@ -105,27 +96,14 @@ export const postInitialUserData = async (user: UserInterface) => {
   });
 };
 
-export const postInitialCareerData = async (
+export const postUserInfo = async (
   user: UserInterface,
-  careers: CareerInterface
+  userInfo: ProfileInterface
 ) => {
   const authID = await filterUserID(user.email);
   const userRef = doc(db, 'users', authID);
   await updateDoc(userRef, {
-    careers: careers,
-  });
-};
-
-export const postUserInfo = async (user: UserInterface, userInfo: any) => {
-  const authID = await filterUserID(user.email);
-  const userRef = doc(db, 'users', authID);
-  const { interest, history, strength, weakness, education } = userInfo;
-  await updateDoc(userRef, {
-    interest: interest,
-    history: history,
-    strength: strength,
-    weakness: weakness,
-    education: education,
+    profile: userInfo,
   });
 };
 
@@ -162,17 +140,6 @@ export const updateUserLinks = async (
     links: updatedLinks,
   });
   await refreshUserData(user, setUser);
-};
-
-export const postInitialLinks = async (
-  user: UserInterface,
-  links: LinkInterface[]
-) => {
-  const authID = await filterUserID(user.email);
-  const userRef = doc(db, 'users', authID);
-  await updateDoc(userRef, {
-    links: links,
-  });
 };
 
 export const deleteLink = async (

@@ -7,14 +7,12 @@ interface PropsInterface {
   details: {
     title: string;
     description: string;
+    link?: string;
   };
 }
 
-function SimpleSidePanel({
-  details = { title: 'abc', description: 'lorem' },
-  close,
-}: Readonly<PropsInterface>) {
-  const { title, description } = details;
+function SimpleSidePanel({ details, close }: Readonly<PropsInterface>) {
+  const { title, description, link } = details;
 
   return (
     // Adjusted classes for full viewport height and right edge positioning
@@ -29,6 +27,18 @@ function SimpleSidePanel({
         <div className="p-5 overflow-y-auto">
           <p className="text-md text-black">{description}</p>
         </div>
+        {link && (
+          <div className="w-full flex px-5 pb-5">
+            <a
+              className="px-4 py-3 bg-[#2a4175] text-white text-sm rounded-md w-fit"
+              href={link}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Explore More
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
