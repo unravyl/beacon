@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-import JobTitleModal from './JobTitleModal';
 import JobDescriptionSidePanel from '@/components/home/JobDescriptionSidePanel';
 import SimpleSidePanel from '@/components/home/SimpleSidePanel';
 
@@ -16,15 +15,18 @@ import {
   insertCareerNodes,
 } from '@/utils/graphUtils';
 import axios from 'axios';
-import { deleteLink } from '@/db/store';
-import { cleanUserProfile } from '@/utils/userUtils';
+import { deleteLink, updateUserLinks, updateUserNodes } from '@/db/store';
+import NodeModal from './NodeModal';
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
-  const [showJobTitleModal, setShowJobTitleModal] = useState(false);
   const [showSidePanelModal, setShowSidePanelModal] = useState(false);
+  const [showNodeModal, setShowNodeModal] = useState(false);
   const [showSimpleSidePanel, setShowSimpleSidePanel] = useState(false);
   const [selectedNode, setSelectedNode] = useState({} as NodeInterface);
+  const [selectedActions, setSelectedActions] = useState(
+    [] as { name: string; action: () => void }[]
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // graph stuff
@@ -53,19 +55,19 @@ const Graph = ({ width = 600, height = 400 }) => {
 
   const showSummary = (node: NodeInterface) => {
     setShowSidePanelModal(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
   };
 
   const expandCareerNode = async (node: NodeInterface) => {
     setIsLoading(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
     insertStepNodes(user, setUser, node);
     setIsLoading(false);
   };
 
   const exploreRelatedCareers = async (node) => {
     setIsLoading(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
     const careerNodes = user.nodes.filter((node) => {
       return node.group === 2;
     });
@@ -89,6 +91,81 @@ const Graph = ({ width = 600, height = 400 }) => {
     };
 
     insertCareerNodes(user, setUser, data.careers, baseNode);
+    setIsLoading(false);
+  };
+
+  const exploreSkillResources = async (node) => {
+    setIsLoading(true);
+    setShowNodeModal(false);
+    const currentLinks = user.links;
+    const currentNodes = user.nodes;
+    let nodeNumberId = user.nodeNumber;
+    let targetNode: NodeInterface;
+    let newNodes: NodeInterface[] = [];
+    let newLinks: LinkInterface[] = [];
+    let existingResources: { name: string; link: string }[] = [];
+    const skillLinks = currentLinks.filter((currentLink) => {
+      return currentLink.source.id == node.id;
+    });
+    if (!skillLinks.length) {
+      console.log('LOG: No links found after skill');
+    }
+    skillLinks.forEach((skillLink) => {
+      const existingResourceNode = currentNodes.find((currentNode) => {
+        return skillLink.target.id == currentNode.id;
+      });
+      if (existingResourceNode?.label && existingResourceNode?.details.link) {
+        existingResources.push({
+          name: existingResourceNode.label,
+          link: existingResourceNode.details.link,
+        });
+
+        if (!targetNode) {
+          const assessmentLink = currentLinks.find((currentLink) => {
+            return existingResourceNode.id == currentLink.source.id;
+          });
+          if (assessmentLink?.target) {
+            const assessmentNodeId = assessmentLink?.target.id;
+            const assessmentNode = currentNodes.find((currentNode) => {
+              return currentNode.id == assessmentNodeId;
+            });
+            if (assessmentNode) {
+              targetNode = assessmentNode;
+            }
+          }
+        }
+      }
+    });
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-skill-resources/',
+      { skill: node.label, existingResources: existingResources }
+    );
+    data.resources.forEach((resource) => {
+      const newNode: NodeInterface = {
+        id: 'Node ' + nodeNumberId,
+        label: resource.name,
+        details: {
+          description: resource.description,
+          link: resource.link,
+        },
+        group: 3.2,
+      };
+      newNodes.push(newNode);
+      nodeNumberId += 1;
+      const skillLink = {
+        source: node.id,
+        target: newNode.id,
+      };
+      newLinks.push(skillLink);
+      const assessmentLink = {
+        source: newNode.id,
+        target: targetNode.id,
+      };
+      newLinks.push(assessmentLink);
+    });
+    updateUserNodes(user, setUser, newNodes);
+    updateUserLinks(user, setUser, newLinks);
+
     setIsLoading(false);
   };
 
@@ -159,7 +236,21 @@ const Graph = ({ width = 600, height = 400 }) => {
     } else if (node.group === 2) {
       // career node
       setSelectedNode(node);
-      setShowJobTitleModal(true);
+      setSelectedActions([
+        {
+          name: 'Show Summary',
+          action: () => showSummary(node),
+        },
+        {
+          name: 'Expand Steps',
+          action: () => expandCareerNode(node),
+        },
+        {
+          name: 'Explore Related Careers',
+          action: () => exploreRelatedCareers(node),
+        },
+      ]);
+      setShowNodeModal(true);
       setShowSidePanelModal(false);
       setShowSimpleSidePanel(false);
     } else if (node.group === 3) {
@@ -189,7 +280,15 @@ const Graph = ({ width = 600, height = 400 }) => {
       expandUpskillingNode(node);
       setShowSimpleSidePanel(false);
       setShowSidePanelModal(false);
-      setShowJobTitleModal(false);
+    } else if (node.group === 3.1) {
+      setSelectedNode(node);
+      setSelectedActions([
+        {
+          name: 'Explore More Resources',
+          action: () => exploreSkillResources(node),
+        },
+      ]);
+      setShowNodeModal(true);
     } else if (node.group === 4) {
       return;
     } else if (node.group === 5) {
@@ -401,13 +500,11 @@ const Graph = ({ width = 600, height = 400 }) => {
     <>
       {isLoading && <Spinner />}
       <svg ref={svgRef}></svg>
-      {showJobTitleModal && (
-        <JobTitleModal
+      {showNodeModal && (
+        <NodeModal
           title={selectedNode.label}
-          close={() => setShowJobTitleModal(false)}
-          summary={() => showSummary(selectedNode)}
-          expand={() => expandCareerNode(selectedNode)}
-          explore={() => exploreRelatedCareers(selectedNode)}
+          actions={selectedActions}
+          close={() => setShowNodeModal(false)}
         />
       )}
       {showSimpleSidePanel && (
