@@ -14,16 +14,6 @@ function Page() {
     height: window.innerHeight,
   });
 
-  const handleUserRefresh = async () => {
-    await refreshUserData(user, setUser);
-  };
-
-  useEffect(() => {
-    if (user.links?.length) {
-      handleUserRefresh();
-    }
-  }, []);
-
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -57,4 +47,3 @@ function Page() {
 }
 
 export default Page;
-

@@ -61,14 +61,15 @@ export const refreshUserData = async (
   const userRef = doc(db, 'users', authID);
   const userSnap = await getDoc(userRef);
   const updatedUserData = userSnap.data();
-  setUser({
+  const newUserData = {
     ...user,
     profile: updatedUserData?.profile,
     nodes: updatedUserData?.nodes,
     links: updatedUserData?.links,
     nodeNumber: updatedUserData?.nodeNumber,
-  });
-  console.log('LOG: Refresh User Data', user);
+  };
+  setUser(newUserData);
+  console.log('LOG: Refresh User Data', newUserData);
 };
 
 export const postInitialUserData = async (user: UserInterface) => {
