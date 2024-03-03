@@ -125,6 +125,21 @@ export const updateUserNodes = async (
   await refreshUserData(user, setUser);
 };
 
+export const updateUserProfile = async (
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>,
+  profile: ProfileInterface
+) => {
+  const authID = await filterUserID(user.email);
+  const userRef = doc(db, 'users', authID);
+
+  const updatedProfile= {...profile};
+  await updateDoc(userRef, {
+    profile: updatedProfile
+  });
+  await refreshUserData(user, setUser);
+};
+
 export const updateUserLinks = async (
   user: UserInterface,
   setUser: Dispatch<SetStateAction<UserInterface>>,

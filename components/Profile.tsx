@@ -1,7 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserContext } from '@/context/UserContext';
+import { refreshUserData, updateUserProfile } from '@/db/store';
 import Image from 'next/image';
+import Spinner from '@/components/generics/Spinner';
+import { useRouter } from 'next/navigation';
+import { ProfileInterface } from '@/interface/authInterface';
+
 
 interface FieldInterface {
   [key: string]: string;
@@ -14,36 +19,72 @@ interface EditModeInterface {
 const inputFields = [
   'Interests',
   'Career History',
-  'Educational Background',
   'Strengths',
   'Weaknesses',
+  'Educational Background',
 ];
 
+const userFields = [
+  'interest',
+  'history',
+  'strength',
+  'weakness',
+  'education',
+]
+
 function Details() {
-  const { setUser } = useUserContext();
+  const router = useRouter();
+  const { user, setUser } = useUserContext();
   const [editMode, setEditMode] = useState({} as EditModeInterface);
-  const [fieldValues, setFieldValues] = useState({} as FieldInterface);
+  const [fieldValues, setFieldValues] = useState({} as ProfileInterface);
+  const [submit, toSubmit] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEditClick = (field: string) => {
     setEditMode((prevEditMode) => ({ ...prevEditMode, [field]: true }));
+    toSubmit(true)
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  
+  const handleInputChange = (field: string, value: string | string[]) => {
     setFieldValues((prevFieldValues) => ({
       ...prevFieldValues,
-      [field]: value,
+      [field]: Array.isArray(value) ? value : [value],
     }));
   };
 
-  const handleSaveClick = (field: string) => {
-    // Update the user data with the new value
-    setUser((prevUser) => ({ ...prevUser, [field]: fieldValues[field] }));
-    // Set edit mode to false
-    setEditMode((prevEditMode) => ({ ...prevEditMode, [field]: false }));
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    const updatedProfile: ProfileInterface = {
+      interest: fieldValues.interest || [],
+      history: fieldValues.history || [],
+      strength: fieldValues.strength || [],
+      weakness: fieldValues.weakness || [],
+      education: fieldValues.education || [],
+    };
+
+
+    await updateUserProfile(user, setUser, updatedProfile);
+    await refreshUserData(user, setUser);
+    setIsLoading(false)
+
+    // Reset edit mode and field values
+
+    router.push('home');
   };
 
+  useEffect(() => {
+    setFieldValues({
+      interest: user.profile?.interest || [],
+      history: user.profile?.history || [],
+      strength: user.profile?.strength || [],
+      weakness: user.profile?.weakness || [],
+      education: user.profile?.education || [],
+    });
+  }, [user]);
   return (
-    <div className="w-[42rem] mt-2 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
+    <div className="w-[33rem] mt-2 flex flex-col items-center mx-auto item bg-[white] rounded-lg py-8">
+      {isLoading && <Spinner />}
       <div className="text-2xl font-bold">PROFILE</div>
       <div className="h-[10rem] aspect-square relative">
         <Image
@@ -63,21 +104,13 @@ function Details() {
               <h1>{input.toUpperCase()}</h1>
             </div>
             <div className="flex justify-between p-2">
-              {editMode[input] ? (
-                <>
                   <input
                     type="text"
-                    value={fieldValues[input] || ''}
-                    onChange={(e) => handleInputChange(input, e.target.value)}
+                    value={fieldValues[userFields[index]] || 's'}
+                    onChange={(e) => handleInputChange(userFields[index], e.target.value)}
                     className="border border-gray-300 rounded px-2 py-1"
+                    disabled={!editMode[input]}
                   />
-                  <button onClick={() => handleSaveClick(input)}>Save</button>
-                </>
-              ) : (
-                <>
-                  <div className="justify-start overflow-x-auto  w-[17rem]">
-                    {fieldValues[input]}
-                  </div>
                   <button
                     onClick={() => handleEditClick(input)}
                     className="relative w-[20px] h-[20px]"
@@ -89,15 +122,22 @@ function Details() {
                       fill
                     />
                   </button>
-                </>
-              )}
             </div>
             <hr className="mb-2"></hr>
           </div>
         ))}
+        <div className='mt-6 flex items-center justify-center w-full'>
+        {submit && (
+          <button onClick={handleSubmit} className=' bg-gray-800 text-lg font-semibold text-white px-4 py-2 '>
+            Submit
+          </button>
+        )}
+        </div>
       </div>
     </div>
   );
 }
 
 export default Details;
+
+
