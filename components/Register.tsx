@@ -7,8 +7,9 @@ import { postUserInfo } from '@/db/store';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
-import { LinkInterface, NodeInterface } from '@/interface/graphInterface';
+import { NodeInterface } from '@/interface/graphInterface';
 import { insertCareerNodes } from '@/utils/graphUtils';
+import { cleanUserProfile } from '@/utils/userUtils';
 
 function Details() {
   const router = useRouter();
@@ -23,10 +24,18 @@ function Details() {
 
   const submit = async () => {
     setIsLoading(true);
-    postUserInfo(user, { interest, history, strength, weakness, education });
+    const profile = {
+      interest: interest,
+      history: history,
+      strength: strength,
+      weakness: weakness,
+      education: education,
+    };
+    const cleanedProfile = cleanUserProfile(profile);
+    postUserInfo(user, cleanedProfile);
     const { data } = await axios.post(
       'http://127.0.0.1:8000/api/generate-top-careers/',
-      { interest, history, strength, weakness, education }
+      { profile: cleanedProfile }
     );
     const rootNode: NodeInterface = {
       id: 'Node 1',
