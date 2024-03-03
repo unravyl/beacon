@@ -25,9 +25,9 @@ function Page() {
       handleUserRefresh();
     }
   }, []);
-  const changePath = ()=> {
-    console.log("User", user)
-    router.push('/profile')
+  const changePath = () => {
+    console.log('User', user);
+    router.push('/profile');
   };
 
   useEffect(() => {

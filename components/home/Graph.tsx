@@ -20,7 +20,6 @@ import NodeModal from './NodeModal';
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
-  const [showJobTitleModal, setShowJobTitleModal] = useState(false);
   const [showSidePanelModal, setShowSidePanelModal] = useState(false);
   const [showNodeModal, setShowNodeModal] = useState(false);
   const [showSimpleSidePanel, setShowSimpleSidePanel] = useState(false);
@@ -56,19 +55,19 @@ const Graph = ({ width = 600, height = 400 }) => {
 
   const showSummary = (node: NodeInterface) => {
     setShowSidePanelModal(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
   };
 
   const expandCareerNode = async (node: NodeInterface) => {
     setIsLoading(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
     insertStepNodes(user, setUser, node);
     setIsLoading(false);
   };
 
   const exploreRelatedCareers = async (node) => {
     setIsLoading(true);
-    setShowJobTitleModal(false);
+    setShowNodeModal(false);
     const careerNodes = user.nodes.filter((node) => {
       return node.group === 2;
     });
