@@ -1,14 +1,10 @@
-import type { Metadata } from 'next';
+'use client';
+
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { UserWrapper } from '@/context/UserContext';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'Beacon',
-  description: 'Personalize Career AI App',
-};
 
 export default function RootLayout({
   children,
@@ -39,4 +35,3 @@ export default function RootLayout({
     </html>
   );
 }
-
