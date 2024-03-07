@@ -8,8 +8,10 @@ import {
   useMemo,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react';
 import { UserInterface } from '@/interface/authInterface';
+import { handleAuthStateChange } from '@/db/auth';
 
 interface UserContextInterface {
   user: UserInterface;
@@ -26,7 +28,7 @@ interface PropsInterface {
 
 export const UserWrapper = (props: PropsInterface) => {
   const { children } = props;
-  const [user, setUser] = useState<UserInterface>({} as UserInterface);
+  const [user, setUser] = useState({} as UserInterface);
 
   const userContextProviderValue = useMemo(
     () => ({
@@ -35,6 +37,10 @@ export const UserWrapper = (props: PropsInterface) => {
     }),
     [user, setUser]
   );
+
+  useEffect(() => {
+    handleAuthStateChange(user, setUser);
+  }, []);
 
   return (
     <UserContext.Provider value={userContextProviderValue}>
