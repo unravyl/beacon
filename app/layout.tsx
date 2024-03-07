@@ -1,5 +1,3 @@
-'use client';
-
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { UserWrapper } from '@/context/UserContext';
