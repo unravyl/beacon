@@ -54,7 +54,12 @@ function FormQuestions(props) {
           <div className="relative">
             <button
               onClick={addAnswer}
-              className="absolute translate-x-[-120%] translate-y-[-50%] bg-accent text-white px-2 py-2 text-[10px] rounded-md hover:brightness-150 shadow-sm"
+              className={
+                'absolute translate-x-[-120%] translate-y-[-50%] bg-accent text-white px-2 py-2 text-[10px] rounded-md hover:brightness-150 shadow-sm ' +
+                (!questionNumber && formItems[0].answers.length == 0
+                  ? 'blink'
+                  : '')
+              }
             >
               <i className="bx bx-plus" />
             </button>

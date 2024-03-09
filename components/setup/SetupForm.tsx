@@ -33,7 +33,7 @@ function SetupForm() {
       question: 'Interest',
       description:
         'Briefly describe your interests, passions, and what motivates you in your career',
-      answers: ['UI/UX development'],
+      answers: [],
     },
     {
       question: 'History',
