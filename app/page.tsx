@@ -23,7 +23,7 @@ export default function Home() {
     if (hasAccountData) {
       router.push('/home');
     } else if (hasAccount) {
-      router.push('/register');
+      router.push('/setup');
     }
   }, [hasAccount, router, hasAccountData]);
 

@@ -1,9 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useUserContext } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 // components
 import FormQuestions from './FormQuestions';
+import Spinner from '@/components/generics/Spinner';
+
+// utils
+import { cleanUserProfile } from '@/utils/userUtils';
+import { postUserInfo } from '@/db/store';
+import { insertCareerNodes } from '@/utils/graphUtils';
+import { NodeInterface } from '@/interface/graphInterface';
 
 function SetupForm() {
   const instructionList = [
@@ -61,13 +71,11 @@ function SetupForm() {
     },
   ]);
 
-  const [clientInfo, setClientInfo] = useState({
-    name: 'Foo bar',
-    email: 'foobar@gmail.com',
-  });
-
   const [questionNumber, setQuestionNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+  const { user, setUser } = useUserContext();
 
   // computed
   const isLastStep = questionNumber == formItems.length - 1;
@@ -79,6 +87,32 @@ function SetupForm() {
 
   const movePrev = () => {
     setQuestionNumber(questionNumber - 1);
+  };
+
+  const submit = async () => {
+    setIsLoading(true);
+
+    const profile: { [key: string]: any } = {};
+    formItems.forEach((question) => {
+      profile[question.question] = question.answers;
+    });
+    const cleanedProfile = cleanUserProfile(profile);
+    postUserInfo(user, cleanedProfile);
+    const { data } = await axios.post(
+      'http://127.0.0.1:8000/api/generate-top-careers/',
+      { profile: cleanedProfile }
+    );
+    const rootNode: NodeInterface = {
+      id: 'Node 1',
+      label: 'You',
+      details: {
+        description: 'Root Node',
+      },
+      group: 1,
+    };
+    //create career nodes
+    insertCareerNodes(user, setUser, data.careers, rootNode);
+    router.push('/home');
   };
 
   return (
@@ -131,7 +165,7 @@ function SetupForm() {
             Setup your profile!
           </h2>
           <p className="text-[16px] font-medium leading-none opacity-80">
-            Name: {clientInfo.name} | Email: {clientInfo.email}
+            Name: {user.name} | Email: {user.email}
           </p>
         </div>
         <div className="flex-grow flex flex-col justify-center pb-20 gap-5">
@@ -159,13 +193,17 @@ function SetupForm() {
                 <i className="bx bx-chevrons-right" />
               </button>
             ) : (
-              <button className="bg-gradient-to-r from-accent via-accent to-secondary text-white py-2 px-4 rounded-md shadow-md px-6 py-3 blink">
+              <button
+                onClick={submit}
+                className="bg-gradient-to-r from-accent via-accent to-secondary text-white py-2 px-4 rounded-md shadow-md px-6 py-3 blink"
+              >
                 Generate Custom Roadmap
               </button>
             )}
           </div>
         </div>
       </aside>
+      {isLoading && <Spinner />}
     </div>
   );
 }
