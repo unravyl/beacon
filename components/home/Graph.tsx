@@ -17,6 +17,43 @@ import {
 import axios from 'axios';
 import { deleteLink, updateUserLinks, updateUserNodes } from '@/db/store';
 import NodeModal from './NodeModal';
+import { ProfileInterface } from '@/interface/authInterface';
+
+const fetchRelatedCareers = async (
+  profile: ProfileInterface,
+  career: string,
+  existingCareers: string[]
+) => {
+  const { data } = await axios.post(
+    'http://127.0.0.1:8000/api/generate-related-careers/',
+    {
+      profile: profile,
+      career: career,
+      existingCareers: existingCareers,
+    }
+  );
+
+  return data;
+};
+
+const fetchSkillResources = async (
+  skill: string,
+  existingResources: { name: string; link: string }[]
+) => {
+  const { data } = await axios.post(
+    'http://127.0.0.1:3000/api/skill-resources/',
+    { skill, existingResources }
+  );
+
+  return data;
+};
+
+const fetchUpskilling = async (career: string) => {
+  const { data } = await axios.post('http://127.0.0.1:3000/api/upskilling/', {
+    career,
+  });
+  return data;
+};
 
 const Graph = ({ width = 600, height = 400 }) => {
   const { user, setUser } = useUserContext();
@@ -74,13 +111,15 @@ const Graph = ({ width = 600, height = 400 }) => {
     const careerNames = careerNodes.map((node) => {
       return node.label;
     });
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-related-careers/',
-      {
-        profile: user.profile,
-        career: node.label,
-        existingCareers: careerNames,
-      }
+
+    if (!user.profile) {
+      console.log('LOG: No user profile found');
+      return;
+    }
+    const data = await fetchRelatedCareers(
+      user.profile,
+      node.label,
+      careerNames
     );
 
     const baseNode = {
@@ -136,10 +175,9 @@ const Graph = ({ width = 600, height = 400 }) => {
         }
       }
     });
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-skill-resources/',
-      { skill: node.label, existingResources: existingResources }
-    );
+
+    const data = await fetchSkillResources(node.label, existingResources);
+
     data.resources.forEach((resource) => {
       const newNode: NodeInterface = {
         id: 'Node ' + nodeNumberId,
@@ -197,11 +235,10 @@ const Graph = ({ width = 600, height = 400 }) => {
       );
       return;
     }
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-upskilling/',
-      { career: careerNode.label }
-    );
+
+    const data = fetchUpskilling(careerNode.label);
     console.log('LOG: Axios Data', careerNode.label, data);
+
     const nextStepLink = userLinks.find((userLink) => {
       return node.id == userLink.source.id;
     });

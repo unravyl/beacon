@@ -134,9 +134,9 @@ export const updateUserProfile = async (
   const authID = await filterUserID(user.email);
   const userRef = doc(db, 'users', authID);
 
-  const updatedProfile= {...profile};
+  const updatedProfile = { ...profile };
   await updateDoc(userRef, {
-    profile: updatedProfile
+    profile: updatedProfile,
   });
   await refreshUserData(user, setUser);
 };

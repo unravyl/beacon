@@ -1,16 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { refreshUserData } from '@/db/store';
 import { useRouter } from 'next/navigation';
-import { useUserContext } from '@/context/UserContext';
 import Image from 'next/image';
 
 import Graph from '@/components/home/Graph';
 
 function Page() {
   const router = useRouter();
-  const { user, setUser } = useUserContext();
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,

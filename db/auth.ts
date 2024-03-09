@@ -1,9 +1,14 @@
+'use client';
+
 import app from '@/db/firebase';
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  setPersistence,
+  browserSessionPersistence,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { UserInterface } from '@/interface/authInterface';
 import { Dispatch, SetStateAction } from 'react';
@@ -18,6 +23,7 @@ export const handleSignIn = async (
   setHasAccounData: Dispatch<SetStateAction<boolean>>
 ) => {
   let userData = {} as UserInterface;
+  await setPersistence(auth, browserSessionPersistence);
   await signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
@@ -60,6 +66,23 @@ export const handleSignIn = async (
     setUser(userData);
     setHasAccount(true);
   }
+};
+
+export const handleAuthStateChange = async (
+  user: UserInterface,
+  setUser: Dispatch<SetStateAction<UserInterface>>
+) => {
+  onAuthStateChanged(auth, (u) => {
+    console.log('LOG: Auth State Data', u);
+    if (u?.email && u?.displayName) {
+      const userData = {
+        ...user,
+        name: u.displayName,
+        email: u.email,
+      };
+      refreshUserData(userData, setUser);
+    }
+  });
 };
 
 export const handleSignOut = () => {
