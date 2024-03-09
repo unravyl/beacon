@@ -150,7 +150,7 @@ function SetupForm() {
                 back
               </button>
             )}
-            {questionNumber < formItems.length - 1 && (
+            {questionNumber < formItems.length - 1 ? (
               <button
                 onClick={moveNext}
                 className="bg-gradient-to-r from-accent via-accent to-secondary text-white py-2 px-4 rounded-md shadow-md px-4 py-3 flex items-center hover:brightness-150"
@@ -158,10 +158,7 @@ function SetupForm() {
                 next
                 <i className="bx bx-chevrons-right" />
               </button>
-            )}
-          </div>
-          <div>
-            {isLastStep && (
+            ) : (
               <button className="bg-gradient-to-r from-accent via-accent to-secondary text-white py-2 px-4 rounded-md shadow-md px-6 py-3 blink">
                 Generate Custom Roadmap
               </button>
