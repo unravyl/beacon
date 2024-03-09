@@ -115,7 +115,7 @@ function SetupForm() {
                 </div>
               </div>
               <div className="flex flex-col">
-                <h2 className="text-[#C7D6E5] text-[16px] font-bold">
+                <h2 className="text-[#C7D6E5] text-[20px] font-bold">
                   {item.title}
                 </h2>
                 <p className="text-[14px]">{item.description}</p>
