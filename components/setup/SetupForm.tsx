@@ -161,10 +161,10 @@ function SetupForm() {
 
       <aside className="text-[#0F172A] bg-[#DBEDFF] flex flex-col gap-5 p-20">
         <div>
-          <h2 className="text-[40px] font-bold leading-none mb-1">
+          <h2 className="text-[40px] font-bold leading-none mb-2">
             Setup your profile!
           </h2>
-          <p className="text-[16px] font-medium leading-none opacity-80">
+          <p className="text-[16px] leading-none opacity-80">
             Name: {user.name} | Email: {user.email}
           </p>
         </div>
