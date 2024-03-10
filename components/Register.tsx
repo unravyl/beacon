@@ -19,6 +19,7 @@ function Details() {
   const [strength, setStrength] = useState(['']);
   const [weakness, setWeakness] = useState(['']);
   const [education, setEducation] = useState(['']);
+
   const [isLoading, setIsLoading] = useState(false);
   const [canSubmitUserData, setCanSubmitUserData] = useState(false);
 
@@ -82,3 +83,4 @@ function Details() {
 }
 
 export default Details;
+

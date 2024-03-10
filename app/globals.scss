@@ -98,3 +98,21 @@ body {
     color: black;
   }
 }
+
+.blink {
+  box-shadow: 0 0 0 4px rgba(#008ff5, 0.25);
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0% {
+    box-shadow: 0 0 0 4px rgba(#008ff5, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(#008ff5, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(#008ff5, 0.25);
+  }
+}
+
