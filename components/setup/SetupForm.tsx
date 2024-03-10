@@ -94,7 +94,7 @@ function SetupForm() {
 
     const profile: { [key: string]: any } = {};
     formItems.forEach((question) => {
-      profile[question.question] = question.answers;
+      profile[question.question.toLowerCase()] = question.answers;
     });
     const cleanedProfile = cleanUserProfile(profile);
     postUserInfo(user, cleanedProfile);
