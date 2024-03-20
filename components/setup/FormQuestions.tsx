@@ -33,7 +33,7 @@ function FormQuestions(props) {
       <h3 className="text-[30px] font-bold leading-none">
         {formItems[questionNumber].question}
       </h3>
-      <p className="opacity-80 text-[12px] font-light mb-1">
+      <p className="opacity-80 text-[12px] font-light mb-4">
         {formItems[questionNumber].description}
       </p>
 
