@@ -382,7 +382,7 @@ const Graph = ({ width = 600, height = 400 }) => {
       while ((word = words.pop())) {
         line.push(word);
         tspan.text(line.join(' '));
-        if (tspan.node().getComputedTextLength() > width) {
+        if (tspan.node() && tspan.node().getComputedTextLength() > width) {
           line.pop();
           tspan.text(line.join(' '));
           line = [word];
