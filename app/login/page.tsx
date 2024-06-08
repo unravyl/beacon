@@ -51,7 +51,7 @@ function page() {
 
             <div className="flex flex-row justify-between">
               <h3 className="text-[16px] text-[#7789B6]">
-                Don't have an account?
+                Don&apos;t have an account?
               </h3>
               <h3 className="text-[16px] font-semibold text-[#586482] hover:text-accent">
                 <a href="\signup">Sign Up</a>
