@@ -58,6 +58,11 @@ export const refreshUserData = async (
   setUser: Dispatch<SetStateAction<UserInterface>>
 ) => {
   const authID = await filterUserID(user.email);
+
+  if (!authID) {
+    return;
+  }
+
   const userRef = doc(db, 'users', authID);
   const userSnap = await getDoc(userRef);
   const updatedUserData = userSnap.data();
@@ -176,3 +181,4 @@ export const deleteLink = async (
     links: updatedLinks,
   });
 };
+
