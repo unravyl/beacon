@@ -365,13 +365,13 @@ const Graph = ({ width = 600, height = 400 }) => {
   ) {
     text.each(function () {
       var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1,
-        y = text.attr('y'),
-        dy = parseFloat(text.attr('dy')),
+        words: string[] = text.text().split(/\s+/).reverse(),
+        word: string | undefined,
+        line: string[] = [],
+        lineNumber: number = 0,
+        lineHeight: number = 1.1,
+        y: string | null = text.attr('y'),
+        dy: number = parseFloat(text.attr('dy')),
         tspan = text
           .text(null)
           .append('tspan')
