@@ -41,7 +41,7 @@ const fetchSkillResources = async (
   existingResources: { name: string; link: string }[]
 ) => {
   const { data } = await axios.post(
-    'http://127.0.0.1:3000/api/skill-resources/',
+    'http://127.0.0.1:8000/api/generate-skill-resources/',
     { skill, existingResources }
   );
 
@@ -49,9 +49,12 @@ const fetchSkillResources = async (
 };
 
 const fetchUpskilling = async (career: string) => {
-  const { data } = await axios.post('http://127.0.0.1:3000/api/upskilling/', {
-    career,
-  });
+  const { data } = await axios.post(
+    'http://127.0.0.1:8000/api/generate-upskilling/',
+    {
+      career,
+    }
+  );
   return data;
 };
 
@@ -207,7 +210,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(false);
   };
 
-  const expandUpskillingNode = async (node) => {
+  const expandUpskillingNode = async (node: NodeInterface) => {
     setIsLoading(true);
     const userLinks = user.links;
     const userNodes = user.nodes;
@@ -236,7 +239,7 @@ const Graph = ({ width = 600, height = 400 }) => {
       return;
     }
 
-    const data = fetchUpskilling(careerNode.label);
+    const data = await fetchUpskilling(careerNode.label);
     console.log('LOG: Axios Data', careerNode.label, data);
 
     const nextStepLink = userLinks.find((userLink) => {
@@ -266,7 +269,7 @@ const Graph = ({ width = 600, height = 400 }) => {
   const [nodeList, setNodeList] = useState(user.nodes);
   const [linksList, setLinksList] = useState(user.links);
 
-  const handleNodeClick = (node) => {
+  const handleNodeClick = (node: NodeInterface) => {
     if (node.group === 1) {
       // root node
       return;
@@ -565,3 +568,4 @@ const Graph = ({ width = 600, height = 400 }) => {
 };
 
 export default Graph;
+
