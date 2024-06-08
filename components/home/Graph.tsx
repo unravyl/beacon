@@ -99,7 +99,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(false);
   };
 
-  const exploreRelatedCareers = async (node) => {
+  const exploreRelatedCareers = async (node: NodeInterface) => {
     setIsLoading(true);
     setShowNodeModal(false);
     const careerNodes = user.nodes.filter((node) => {
@@ -130,7 +130,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(false);
   };
 
-  const exploreSkillResources = async (node) => {
+  const exploreSkillResources = async (node: NodeInterface) => {
     setIsLoading(true);
     setShowNodeModal(false);
     const currentLinks = user.links;
