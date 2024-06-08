@@ -140,16 +140,18 @@ const Graph = ({ width = 600, height = 400 }) => {
     let newNodes: NodeInterface[] = [];
     let newLinks: LinkInterface[] = [];
     let existingResources: { name: string; link: string }[] = [];
-    const skillLinks = currentLinks.filter((currentLink) => {
+    const skillLinks = currentLinks.filter((currentLink: LinkInterface) => {
       return currentLink.source.id == node.id;
     });
     if (!skillLinks.length) {
       console.log('LOG: No links found after skill');
     }
     skillLinks.forEach((skillLink) => {
-      const existingResourceNode = currentNodes.find((currentNode) => {
-        return skillLink.target.id == currentNode.id;
-      });
+      const existingResourceNode = currentNodes.find(
+        (currentNode: NodeInterface) => {
+          return skillLink.target.id == currentNode.id;
+        }
+      );
       if (existingResourceNode?.label && existingResourceNode?.details.link) {
         existingResources.push({
           name: existingResourceNode.label,
@@ -157,14 +159,18 @@ const Graph = ({ width = 600, height = 400 }) => {
         });
 
         if (!targetNode) {
-          const assessmentLink = currentLinks.find((currentLink) => {
-            return existingResourceNode.id == currentLink.source.id;
-          });
+          const assessmentLink = currentLinks.find(
+            (currentLink: LinkInterface) => {
+              return existingResourceNode.id == currentLink.source.id;
+            }
+          );
           if (assessmentLink?.target) {
             const assessmentNodeId = assessmentLink?.target.id;
-            const assessmentNode = currentNodes.find((currentNode) => {
-              return currentNode.id == assessmentNodeId;
-            });
+            const assessmentNode = currentNodes.find(
+              (currentNode: NodeInterface) => {
+                return currentNode.id == assessmentNodeId;
+              }
+            );
             if (assessmentNode) {
               targetNode = assessmentNode;
             }

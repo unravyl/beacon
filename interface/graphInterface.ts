@@ -15,7 +15,7 @@ export interface NodeInterface extends SimulationNodeDatum {
 
 export interface LinkInterface
   extends SimulationLinkDatum<SimulationNodeDatum> {
-  source: string;
-  target: string;
+  source: NodeInterface;
+  target: NodeInterface;
 }
 
