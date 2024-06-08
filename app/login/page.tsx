@@ -34,7 +34,7 @@ function page() {
             ></input>
 
             <div className="flex flex-col gap-2 my-5 items-center">
-              <button className="w-full text-center bg-gradient-to-r from-accent via-accent to-secondary text-white py-2 px-4 rounded-md shadow-md px-4 py-3 hover:brightness-150">
+              <button className="w-full text-center bg-gradient-to-r from-accent via-accent to-secondary text-white rounded-md shadow-md px-4 py-3 hover:brightness-150">
                 Sign In
               </button>
               <button className="w-full bg-white rounded-md shadow-md px-4 py-3 flex justify-between items-center hover:bg-opacity-50">
