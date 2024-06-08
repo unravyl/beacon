@@ -359,43 +359,60 @@ const Graph = ({ width = 600, height = 400 }) => {
     setLinksList(user.links);
   }, [user]);
 
+  function wrap(text, width) {
+    text.each(function () {
+      var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1,
+        y = text.attr('y'),
+        dy = parseFloat(text.attr('dy')),
+        tspan = text
+          .text(null)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', y)
+          .attr('dy', dy + 'em');
+
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(' '));
+          line = [word];
+          tspan = text
+            .append('tspan')
+            .attr('x', 0)
+            .attr('y', y)
+            .attr('dy', `${lineNumber * lineHeight + 1}em`)
+            .text(word);
+        }
+      }
+    });
+  }
+
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
   useEffect(() => {
     if (linksList?.length && nodeList.length > 1) {
-      function wrap(text, width) {
-        text.each(function () {
-          var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1.1,
-            y = text.attr('y'),
-            dy = parseFloat(text.attr('dy')),
-            tspan = text
-              .text(null)
-              .append('tspan')
-              .attr('x', 0)
-              .attr('y', y)
-              .attr('dy', dy + 'em');
-
-          while ((word = words.pop())) {
-            line.push(word);
-            tspan.text(line.join(' '));
-            if (tspan.node().getComputedTextLength() > width) {
-              line.pop();
-              tspan.text(line.join(' '));
-              line = [word];
-              tspan = text
-                .append('tspan')
-                .attr('x', 0)
-                .attr('y', y)
-                .attr('dy', `${lineNumber * lineHeight + 1}em`)
-                .text(word);
-            }
-          }
-        });
-      }
-
       const svg = d3
         .select(svgRef.current)
         .attr('width', width)
@@ -517,23 +534,6 @@ const Graph = ({ width = 600, height = 400 }) => {
 
         node.attr('transform', (d) => `translate(${d.x},${d.y})`);
       });
-
-      function dragstarted(event, d) {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-
-      function dragged(event, d) {
-        d.fx = event.x;
-        d.fy = event.y;
-      }
-
-      function dragended(event, d) {
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-      }
     }
   }, [width, height, nodeList, linksList]);
 
