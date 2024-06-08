@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Input from '@/components/generics/Input';
 import { useUserContext } from '@/context/UserContext';
 import { postUserInfo } from '@/db/store';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/generics/Spinner';
 import { NodeInterface } from '@/interface/graphInterface';
@@ -34,10 +34,9 @@ function Details() {
     };
     const cleanedProfile = cleanUserProfile(profile);
     postUserInfo(user, cleanedProfile);
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-top-careers/',
-      { profile: cleanedProfile }
-    );
+    const { data } = await axios.post('/generate-top-careers', {
+      profile: cleanedProfile,
+    });
     const rootNode: NodeInterface = {
       id: 'Node 1',
       label: 'You',

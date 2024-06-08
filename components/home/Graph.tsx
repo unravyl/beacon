@@ -14,7 +14,7 @@ import {
   insertUpskillingNodes,
   insertCareerNodes,
 } from '@/utils/graphUtils';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { deleteLink, updateUserLinks, updateUserNodes } from '@/db/store';
 import NodeModal from './NodeModal';
 import { ProfileInterface } from '@/interface/authInterface';
@@ -24,14 +24,11 @@ const fetchRelatedCareers = async (
   career: string,
   existingCareers: string[]
 ) => {
-  const { data } = await axios.post(
-    'http://127.0.0.1:8000/api/generate-related-careers/',
-    {
-      profile: profile,
-      career: career,
-      existingCareers: existingCareers,
-    }
-  );
+  const { data } = await axios.post('/generate-related-careers/', {
+    profile: profile,
+    career: career,
+    existingCareers: existingCareers,
+  });
 
   return data;
 };
@@ -40,21 +37,18 @@ const fetchSkillResources = async (
   skill: string,
   existingResources: { name: string; link: string }[]
 ) => {
-  const { data } = await axios.post(
-    'http://127.0.0.1:8000/api/generate-skill-resources/',
-    { skill, existingResources }
-  );
+  const { data } = await axios.post('/generate-skill-resources/', {
+    skill,
+    existingResources,
+  });
 
   return data;
 };
 
 const fetchUpskilling = async (career: string) => {
-  const { data } = await axios.post(
-    'http://127.0.0.1:8000/api/generate-upskilling/',
-    {
-      career,
-    }
-  );
+  const { data } = await axios.post('/generate-upskilling/', {
+    career,
+  });
   return data;
 };
 

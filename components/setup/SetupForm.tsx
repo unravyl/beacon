@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useUserContext } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 // components
 import FormQuestions from './FormQuestions';
@@ -98,10 +98,9 @@ function SetupForm() {
     });
     const cleanedProfile = cleanUserProfile(profile);
     postUserInfo(user, cleanedProfile);
-    const { data } = await axios.post(
-      'http://127.0.0.1:8000/api/generate-top-careers/',
-      { profile: cleanedProfile }
-    );
+    const { data } = await axios.post('/generate-top-careers/', {
+      profile: cleanedProfile,
+    });
     const rootNode: NodeInterface = {
       id: 'Node 1',
       label: 'You',
