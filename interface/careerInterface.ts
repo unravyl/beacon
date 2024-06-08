@@ -14,7 +14,7 @@ interface CareerAssessmentInterface {
   link: string;
 }
 
-interface CareerSkillResourceInterface {
+export interface CareerSkillResourceInterface {
   name: string;
   description: string;
   link: string;
@@ -38,3 +38,4 @@ export interface CareerDetailsInterface {
   companies: string[];
   qualifications: string[];
 }
+

@@ -18,6 +18,7 @@ import axios from '@/lib/axios';
 import { deleteLink, updateUserLinks, updateUserNodes } from '@/db/store';
 import NodeModal from './NodeModal';
 import { ProfileInterface } from '@/interface/authInterface';
+import { CareerSkillResourceInterface } from '@/interface/careerInterface';
 
 const fetchRelatedCareers = async (
   profile: ProfileInterface,
@@ -181,7 +182,7 @@ const Graph = ({ width = 600, height = 400 }) => {
 
     const data = await fetchSkillResources(node.label, existingResources);
 
-    data.resources.forEach((resource) => {
+    data.resources.forEach((resource: CareerSkillResourceInterface) => {
       const newNode: NodeInterface = {
         id: 'Node ' + nodeNumberId,
         label: resource.name,
@@ -220,7 +221,7 @@ const Graph = ({ width = 600, height = 400 }) => {
       );
       return;
     }
-    const upskillingLink = userLinks.find((userLink) => {
+    const upskillingLink = userLinks.find((userLink: LinkInterface) => {
       return node.id == userLink.target.id;
     });
     if (!upskillingLink) {
@@ -229,7 +230,7 @@ const Graph = ({ width = 600, height = 400 }) => {
       );
       return;
     }
-    const careerNode = userNodes.find((userNode) => {
+    const careerNode = userNodes.find((userNode: NodeInterface) => {
       return upskillingLink?.source.id == userNode.id;
     });
     if (!careerNode) {
