@@ -1,7 +1,25 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 
-function FormQuestions(props) {
+interface PropsInterface {
+  formItems: {
+    question: string;
+    description: string;
+    answers: any[];
+  }[];
+  setFormItems: Dispatch<
+    SetStateAction<
+      {
+        question: string;
+        description: string;
+        answers: never[];
+      }[]
+    >
+  >;
+  questionNumber: number;
+}
+
+function FormQuestions(props: PropsInterface) {
   const { formItems, setFormItems, questionNumber } = props;
   const [inputText, setInputText] = useState('');
 
