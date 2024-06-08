@@ -183,7 +183,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     const data = await fetchSkillResources(node.label, existingResources);
 
     data.resources.forEach((resource: CareerSkillResourceInterface) => {
-      const newNode: NodeInterface = {
+      const newNode = {
         id: 'Node ' + nodeNumberId,
         label: resource.name,
         details: {
