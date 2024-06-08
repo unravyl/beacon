@@ -359,7 +359,10 @@ const Graph = ({ width = 600, height = 400 }) => {
     setLinksList(user.links);
   }, [user]);
 
-  function wrap(text, width) {
+  function wrap(
+    text: d3.Selection<SVGTextElement, unknown, null, undefined>,
+    width: number
+  ) {
     text.each(function () {
       var text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),
@@ -394,18 +397,27 @@ const Graph = ({ width = 600, height = 400 }) => {
     });
   }
 
-  function dragstarted(event, d) {
+  function dragstarted(
+    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    d: NodeInterface
+  ) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
 
-  function dragged(event, d) {
+  function dragged(
+    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    d: NodeInterface
+  ) {
     d.fx = event.x;
     d.fy = event.y;
   }
 
-  function dragended(event, d) {
+  function dragended(
+    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    d: NodeInterface
+  ) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
