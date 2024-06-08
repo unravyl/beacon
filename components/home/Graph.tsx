@@ -183,7 +183,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     const data = await fetchSkillResources(node.label, existingResources);
 
     data.resources.forEach((resource: CareerSkillResourceInterface) => {
-      const newNode = {
+      const newNode: NodeInterface = {
         id: 'Node ' + nodeNumberId,
         label: resource.name,
         details: {
@@ -195,13 +195,13 @@ const Graph = ({ width = 600, height = 400 }) => {
       newNodes.push(newNode);
       nodeNumberId += 1;
       const skillLink = {
-        source: node.id,
-        target: newNode.id,
+        source: node,
+        target: newNode,
       };
       newLinks.push(skillLink);
       const assessmentLink = {
-        source: newNode.id,
-        target: targetNode.id,
+        source: newNode,
+        target: targetNode,
       };
       newLinks.push(assessmentLink);
     });

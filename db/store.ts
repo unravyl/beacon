@@ -156,7 +156,15 @@ export const updateUserLinks = async (
   const userSnap = await getDoc(userRef);
   const userLinks = userSnap.data()?.links;
 
-  const updatedLinks = [...userLinks, ...newLinks];
+  const cleanedNewLinks = newLinks.map((link: LinkInterface) => {
+    return {
+      ...link,
+      source: link.source.id,
+      target: link.target.id,
+    };
+  });
+
+  const updatedLinks = [...userLinks, ...cleanedNewLinks];
   await updateDoc(userRef, {
     links: updatedLinks,
   });
