@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import { UserWrapper } from '@/context/UserContext';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           className={`${inter.className} bg-[url('/generics/LandPageBG.svg')]`}
         >
           {children}
+          <Analytics />
         </body>
       </UserWrapper>
     </html>
