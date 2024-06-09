@@ -43,31 +43,31 @@ function SetupForm() {
       question: 'Interest',
       description:
         'Briefly describe your interests, passions, and what motivates you in your career',
-      answers: [],
+      answers: [] as any[],
     },
     {
       question: 'History',
       description:
         'Summarize your past work experiences, projects, and any significant milestones in your career journey.',
-      answers: [],
+      answers: [] as any[],
     },
     {
       question: 'Strengths',
       description:
         'Identify your key strengths, skills, and attributes that contribute to your professional success',
-      answers: [],
+      answers: [] as any[],
     },
     {
       question: 'Weaknesses',
       description:
         'Reflect on areas where you feel you may need improvement or development',
-      answers: [],
+      answers: [] as any[],
     },
     {
       question: 'Education',
       description:
         'Outline your educational background, including degrees, certifications, and relevant courses',
-      answers: [],
+      answers: [] as any[],
     },
   ]);
 

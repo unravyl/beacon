@@ -5,10 +5,10 @@ interface PropsInterface {
   close: () => void;
   details: {
     title: string;
-    salary: string;
+    salary?: string;
     description: string;
-    companies: string[];
-    qualifications: string[];
+    companies?: string[];
+    qualifications?: string[];
   };
 }
 
@@ -17,8 +17,16 @@ function JobDescriptionSidePanel({ details, close }: Readonly<PropsInterface>) {
     { title: 'Position Title', info: details.title },
     { title: 'Description', info: details.description },
     { title: 'Salary', info: details.salary },
-    { title: 'Top Companies Hiring', info: details.companies.join(', ') },
-    { title: 'Qualification', info: details.qualifications.join(', ') },
+    {
+      title: 'Top Companies Hiring',
+      info: details.companies ? details.companies.join(', ') : 'Unknown',
+    },
+    {
+      title: 'Qualification',
+      info: details.qualifications
+        ? details.qualifications.join(', ')
+        : 'Unknown',
+    },
   ];
 
   return (
@@ -32,7 +40,7 @@ function JobDescriptionSidePanel({ details, close }: Readonly<PropsInterface>) {
       <div className="grow flex flex-1 flex-col p-3 overflow-y-auto h-full bg-white rounded-bl-xl text-[#0c1323]">
         {description.map((item, index) => (
           <div
-            key={item.title.concat(item.info)}
+            key={item.title.concat(index.toString())}
             className=" flex p-4 items-center border-b-2 border-[#c8d0e0]"
           >
             <h1 className="font-bold h-full w-[30%]">{item.title}:</h1>

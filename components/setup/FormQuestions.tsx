@@ -12,7 +12,7 @@ interface PropsInterface {
       {
         question: string;
         description: string;
-        answers: never[];
+        answers: any[];
       }[]
     >
   >;
@@ -36,7 +36,7 @@ function FormQuestions(props: PropsInterface) {
     setInputText('');
   };
 
-  const removeAnswer = (index) => {
+  const removeAnswer = (index: number) => {
     const newAnswers = formItems[questionNumber].answers;
     newAnswers.splice(index, 1);
     setFormItems((prevFormItems) => {
