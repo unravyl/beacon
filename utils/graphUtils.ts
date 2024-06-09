@@ -54,13 +54,13 @@ export const insertStepNodes = (
     let newLink = {} as LinkInterface;
     if (stepLinks.length) {
       newLink = {
-        source: 'Node ' + (nodeIdNumber - 1),
-        target: stepNode.id,
+        source: stepNodes[-2],
+        target: stepNode,
       };
     } else {
       newLink = {
-        source: careerNode.id,
-        target: stepNode.id,
+        source: careerNode,
+        target: stepNode,
       };
     }
     stepLinks.push(newLink);
@@ -101,8 +101,8 @@ export const insertUpskillingNodes = (
     newNodes.push(skillNode);
 
     const skillLink: LinkInterface = {
-      source: currentStepNode.id,
-      target: skillNode.id,
+      source: currentStepNode,
+      target: skillNode,
     };
     newLinks.push(skillLink);
 
@@ -134,21 +134,21 @@ export const insertUpskillingNodes = (
       newNodes.push(resourceNode);
 
       const resourceLink: LinkInterface = {
-        source: skillNode.id,
-        target: resourceNode.id,
+        source: skillNode,
+        target: resourceNode,
       };
       newLinks.push(resourceLink);
 
       const assessmentLink: LinkInterface = {
-        source: resourceNode.id,
-        target: assessmentNode.id,
+        source: resourceNode,
+        target: assessmentNode,
       };
       newLinks.push(assessmentLink);
     });
 
     const finalLink: LinkInterface = {
-      source: assessmentNode.id,
-      target: nextStepNode.id,
+      source: assessmentNode,
+      target: nextStepNode,
     };
     newLinks.push(finalLink);
   });
@@ -184,8 +184,8 @@ export const insertCareerNodes = (
     nodeIdNumber += 1;
 
     const careerLink: LinkInterface = {
-      source: previousNode.id,
-      target: careerNode.id,
+      source: previousNode,
+      target: careerNode,
     };
     careerLinks.push(careerLink);
   });
@@ -194,3 +194,4 @@ export const insertCareerNodes = (
   updateUserNodes(user, setUser, careerNodes);
   updateUserLinks(user, setUser, careerLinks);
 };
+
