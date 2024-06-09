@@ -53,8 +53,9 @@ export const insertStepNodes = (
 
     let newLink = {} as LinkInterface;
     if (stepLinks.length) {
+      console.log('LOG STEP NODES -2', stepNodes[stepNodes.length - 1]);
       newLink = {
-        source: stepNodes[-2],
+        source: stepNodes[stepNodes.length - 2],
         target: stepNode,
       };
     } else {
