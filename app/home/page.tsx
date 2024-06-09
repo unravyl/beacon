@@ -25,9 +25,16 @@ function Page() {
       });
     };
 
-    window.addEventListener('resize', handleResize);
+    if (typeof window !== 'undefined') {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
 
-    return () => window.removeEventListener('resize', handleResize);
+      window.addEventListener('resize', handleResize);
+
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, []);
 
   return (
@@ -47,9 +54,12 @@ function Page() {
           className="bx bx-face text-white text-5xl"
         ></i>
       </button>
-      <Graph width={windowSize.width} height={windowSize.height} />
+      {windowSize.width && windowSize.height && (
+        <Graph width={windowSize.width} height={windowSize.height} />
+      )}
     </div>
   );
 }
 
 export default Page;
+
