@@ -64,8 +64,12 @@ const Graph = ({ width = 600, height = 400 }) => {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+  type NodeColorMap = {
+    [key: number]: string;
+  };
+
   // graph stuff
-  const nodeColors = {
+  const nodeColors: NodeColorMap = {
     1: '#69b3a2',
     2: '#274069',
     3: '#32CD32',
@@ -76,7 +80,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     5: '#32CD32',
     6: '#32CD32',
   };
-  const nodeTextColors = {
+  const nodeTextColors: NodeColorMap = {
     1: '#fff',
     2: '#fff',
     3: '#274069',
@@ -266,7 +270,7 @@ const Graph = ({ width = 600, height = 400 }) => {
     setIsLoading(false);
   };
 
-  const svgRef = useRef();
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const [nodeList, setNodeList] = useState(user.nodes);
   const [linksList, setLinksList] = useState(user.links);
 
@@ -359,88 +363,59 @@ const Graph = ({ width = 600, height = 400 }) => {
     setLinksList(user.links);
   }, [user]);
 
-  function wrap(
-    text: d3.Selection<SVGTextElement, unknown, null, undefined>,
-    width: number
-  ) {
-    text.each(function () {
-      var text = d3.select(this),
-        words: string[] = text.text().split(/\s+/).reverse(),
-        word: string | undefined,
-        line: string[] = [],
-        lineNumber: number = 0,
-        lineHeight: number = 1.1,
-        y: string | null = text.attr('y'),
-        dy: number = parseFloat(text.attr('dy')),
-        tspan = text
-          .text(null)
-          .append('tspan')
-          .attr('x', 0)
-          .attr('y', y)
-          .attr('dy', dy + 'em');
-
-      while ((word = words.pop())) {
-        line.push(word);
-        tspan.text(line.join(' '));
-        if (
-          tspan &&
-          tspan.node() &&
-          tspan.node().getComputedTextLength() > width
-        ) {
-          line.pop();
-          tspan.text(line.join(' '));
-          line = [word];
-          tspan = text
-            .append('tspan')
-            .attr('x', 0)
-            .attr('y', y)
-            .attr('dy', `${lineNumber * lineHeight + 1}em`)
-            .text(word);
-        }
-      }
-    });
-  }
-
-  function dragstarted(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
-    d: NodeInterface
-  ) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
-    d: NodeInterface
-  ) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-
-  function dragended(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
-    d: NodeInterface
-  ) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
   useEffect(() => {
-    if (linksList?.length && nodeList.length > 1) {
+    if (linksList?.length && nodeList.length > 1 && svgRef.current) {
+      const wrap = (
+        text: d3.Selection<SVGTextElement, NodeInterface, SVGGElement, any>,
+        width: number
+      ) => {
+        text.each(function () {
+          var text = d3.select(this),
+            words: string[] = text.text().split(/\s+/).reverse(),
+            word: string | undefined,
+            line: string[] = [],
+            lineNumber: number = 0,
+            lineHeight: number = 1.1,
+            y: string | null = text.attr('y'),
+            dy: number = parseFloat(text.attr('dy')),
+            tspan = text
+              .text(null)
+              .append('tspan')
+              .attr('x', 0)
+              .attr('y', y)
+              .attr('dy', dy + 'em');
+
+          while ((word = words.pop())) {
+            line.push(word);
+            tspan.text(line.join(' '));
+            const tspanNode = tspan.node();
+            if (tspanNode && tspanNode.getComputedTextLength() > width) {
+              line.pop();
+              tspan.text(line.join(' '));
+              line = [word];
+              tspan = text
+                .append('tspan')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('dy', `${lineNumber * lineHeight + 1}em`)
+                .text(word);
+            }
+          }
+        });
+      };
+
       const svg = d3
-        .select(svgRef.current)
+        .select<SVGSVGElement, any>(svgRef.current)
         .attr('width', width)
         .attr('height', height)
         .style('background-color', '#0C1323')
         .call(
-          d3.zoom().on('zoom', (event) => {
+          d3.zoom<SVGSVGElement, any>().on('zoom', (event) => {
             container.attr('transform', event.transform);
           })
         );
 
-      let container = svg.select('g');
+      let container = svg.select<SVGGElement>('g');
       if (container.empty()) {
         container = svg.append('g');
       } else {
@@ -452,7 +427,7 @@ const Graph = ({ width = 600, height = 400 }) => {
       const links: LinkInterface[] = linksList;
 
       const link = container
-        .selectAll('.link')
+        .selectAll<SVGLineElement, LinkInterface>('.link')
         .data(links)
         .enter()
         .append('line')
@@ -460,8 +435,34 @@ const Graph = ({ width = 600, height = 400 }) => {
         .style('stroke-width', 1)
         .style('stroke', '#ffffff');
 
+      const dragstarted = (
+        event: d3.D3DragEvent<SVGGElement, NodeInterface, NodeInterface>,
+        d: NodeInterface
+      ) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      };
+
+      const dragged = (
+        event: d3.D3DragEvent<SVGGElement, NodeInterface, NodeInterface>,
+        d: NodeInterface
+      ) => {
+        d.fx = event.x;
+        d.fy = event.y;
+      };
+
+      const dragended = (
+        event: d3.D3DragEvent<SVGGElement, NodeInterface, NodeInterface>,
+        d: NodeInterface
+      ) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      };
+
       const drag = d3
-        .drag()
+        .drag<SVGGElement, NodeInterface>()
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended);
@@ -483,7 +484,6 @@ const Graph = ({ width = 600, height = 400 }) => {
       node
         .append('text')
         .text((d) => d.label)
-
         .style('text-anchor', 'middle')
         .style('fill', (d) =>
           nodeTextColors[d.group] ? nodeTextColors[d.group] : '#000'
@@ -492,15 +492,18 @@ const Graph = ({ width = 600, height = 400 }) => {
         .attr('class', 'node')
         .call(wrap, 220);
 
-      node.each(function (d) {
+      node.each(function (d: NodeInterface) {
         const bbox = this.getBBox();
         const padding = 4;
+        if (!d.width) {
+          return;
+        }
         d.width = Math.max(d.width, bbox.width + 2 * padding);
         d.height = bbox.height + 2 * padding;
       });
 
-      node.selectAll('text').each(function (d) {
-        const bbox = this.getBBox();
+      node.selectAll('text').each(function (d: any) {
+        const bbox = (this as SVGTextElement)?.getBBox?.();
         const padding = 15;
         d.width = bbox.width + 2 * padding;
         d.height = bbox.height + 2 * padding;
@@ -515,19 +518,19 @@ const Graph = ({ width = 600, height = 400 }) => {
         )
         .style('stroke', '#fff')
         .style('stroke-width', 1)
-        .attr('width', (d) => d.width)
-        .attr('height', (d) => d.height)
-        .attr('x', (d) => -d.width / 2)
-        .attr('y', (d) => -d.height / 2)
+        .attr('width', (d: any) => d.width)
+        .attr('height', (d: any) => d.height)
+        .attr('x', (d: any) => -d.width / 2)
+        .attr('y', (d: any) => -d.height / 2)
         .attr('rx', 10)
         .attr('ry', 10);
 
       node
         .selectAll('rect')
-        .attr('width', (d) => d.width)
-        .attr('height', (d) => d.height)
-        .attr('x', (d) => -d.width / 2)
-        .attr('y', (d) => -d.height / 2);
+        .attr('width', (d: any) => d.width)
+        .attr('height', (d: any) => d.height)
+        .attr('x', (d: any) => -d.width / 2)
+        .attr('y', (d: any) => -d.height / 2);
 
       const simulation = d3
         .forceSimulation(nodes)
@@ -535,7 +538,7 @@ const Graph = ({ width = 600, height = 400 }) => {
           'link',
           d3
             .forceLink(links)
-            .id((d) => d.id)
+            .id((d: any) => d.id)
             .distance(200)
         )
         .force('charge', d3.forceManyBody().strength(-1500))
@@ -543,10 +546,10 @@ const Graph = ({ width = 600, height = 400 }) => {
 
       simulation.on('tick', () => {
         link
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
+          .attr('x1', (d: any) => d.source.x)
+          .attr('y1', (d: any) => d.source.y)
+          .attr('x2', (d: any) => d.target.x)
+          .attr('y2', (d: any) => d.target.y);
 
         node.attr('transform', (d) => `translate(${d.x},${d.y})`);
       });
