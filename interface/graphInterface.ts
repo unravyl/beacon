@@ -11,6 +11,8 @@ export interface NodeInterface extends SimulationNodeDatum {
     qualifications?: string[];
   };
   group: number;
+  width?: number;
+  height?: number;
 }
 
 export interface LinkInterface
