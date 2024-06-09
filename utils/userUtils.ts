@@ -13,3 +13,4 @@ export const cleanUserProfile = (profile: ProfileInterface) => {
   }
   return updatedProfile;
 };
+
