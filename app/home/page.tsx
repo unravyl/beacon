@@ -9,8 +9,8 @@ import Graph from '@/components/home/Graph';
 function Page() {
   const router = useRouter();
   const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 600,
+    height: 1000,
   });
 
   const handleRedirectToProfilePage = () => {
