@@ -46,8 +46,8 @@ function Page() {
                       >
                         OpenAI website
                       </a>{' '}
-                      and sign up for an account if you don't have one, or log
-                      in if you already do.
+                      and sign up for an account if you don&apos;t have one, or
+                      log in if you already do.
                     </li>
                     <li>
                       Go to the API section by clicking on the dashboard in the
@@ -86,3 +86,4 @@ function Page() {
 }
 
 export default Page;
+
