@@ -51,12 +51,12 @@ function Page() {
                     </li>
                     <li>
                       Go to the API section by clicking on the dashboard in the
-                      top-right corner and selecting "API keys" from the
-                      sidebar.
+                      top-right corner and selecting &quot;API keys&quot; from
+                      the sidebar.
                     </li>
                     <li>
-                      Click on "Create new secret key" to generate a new API
-                      key.
+                      Click on &quot;Create new secret key&quot; to generate a
+                      new API key.
                     </li>
                     <li>
                       After generating, copy the key and paste it in the input
