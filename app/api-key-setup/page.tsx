@@ -25,13 +25,13 @@ function Page() {
           <main className="w-full">
             <div className="flex justify-center items-center gap-x-1  mb-2">
               <h3 className="text-xl font-semibold">OpenAI API Key</h3>
-              <div className="relative">
+              <div className="relative group">
                 <IoMdInformationCircleOutline
                   size={20}
-                  className="cursor-pointer peer"
+                  className="cursor-pointer"
                 />
 
-                <div className="invisible absolute bottom-0 left-5 peer-hover:visible  peer mt-2 p-3 w-96 bg-white border border-black text-justify rounded shadow-lg z-10 text-xs ">
+                <div className="invisible absolute bottom-0 left-5 group-hover:visible  peer mt-2 p-3 w-96 bg-white border border-black text-justify rounded shadow-lg z-10 text-xs ">
                   <p className="text-sm mb-1">
                     <strong>How to Get Your OpenAI API Key:</strong>
                   </p>
