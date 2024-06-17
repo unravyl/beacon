@@ -137,7 +137,7 @@ function SetupForm() {
             </p>
           </div>
         </header>
-        <section className="flex flex-col flex-grow justify-center pb-[80px] gap-6 pl-6">
+        <section className="flex flex-col flex-grow justify-center pb-[80px] gap-6 pl-6 max-w-[700px] self-center">
           {instructionList.map((item, index) => (
             <div className="flex gap-4 items-center" key={'item-' + index}>
               <div className="w-[25px] h-[25px] min-w-[25px] min-h-[25px] flex justify-center bg-[#C7D6E5] rounded-full">
