@@ -15,3 +15,5 @@ A career guidance web application that utilizes generative artificial intelligen
 - Vercel
 - Github Actions
 - GCP Compute Engine
+
+This organization repository is using github actions to deploy freely in vercel
