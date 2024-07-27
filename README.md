@@ -13,4 +13,5 @@ A career guidance web application that utilizes generative artificial intelligen
 - Firebase Auth
 ### Deployment
 - Vercel
+- Github Actions
 - GCP Compute Engine
